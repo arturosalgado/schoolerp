@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\InformationTechnology\Resources\Roles\Schemas;
+namespace App\Filament\It\Resources\Roles\Schemas;
 
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;

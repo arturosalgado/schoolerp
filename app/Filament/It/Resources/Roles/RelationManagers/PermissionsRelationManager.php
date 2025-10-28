@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\InformationTechnology\Resources\Roles\RelationManagers;
+namespace App\Filament\It\Resources\Roles\RelationManagers;
 
 use App\Models\Panel;
 use App\Models\Permission;

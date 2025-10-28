@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\InformationTechnology\Resources\Roles\RelationManagers;
+namespace App\Filament\It\Resources\Roles\RelationManagers;
 
-use App\Filament\InformationTechnology\Resources\Users\UserResource;
+use App\Filament\It\Resources\Users\UserResource;
 use App\Models\School;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
