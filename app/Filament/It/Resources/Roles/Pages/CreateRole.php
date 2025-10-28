@@ -13,8 +13,6 @@ class CreateRole extends CreateRecord
     protected function afterCreate(): void
     {
 
-
-        //dd($this->data);
         $panelIds = $this->data['panels'];
 
         // Get the panel names from the selected panel IDs
