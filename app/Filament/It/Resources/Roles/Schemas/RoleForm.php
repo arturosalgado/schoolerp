@@ -18,7 +18,8 @@ class RoleForm
         return $schema
             ->components([
                 TextInput::make('name')->label('Nombre')
-                    ->required(),
+                    ->required()
+                    ->unique(table: 'roles', column: 'name', ignoreRecord: true),
 
 
 
