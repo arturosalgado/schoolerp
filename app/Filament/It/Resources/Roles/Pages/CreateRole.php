@@ -12,16 +12,24 @@ class CreateRole extends CreateRecord
 
     protected function afterCreate(): void
     {
-        // Get all available permissions
-        $allPermissions = Permission::all();
+
+
+        //dd($this->data);
+        $panelIds = $this->data['panels'];
+
+        // Get the panel names from the selected panel IDs
+        $panelNames = \App\Models\Panel::whereIn('id', $panelIds)->pluck('name')->toArray();
+
+        // Get permissions only for the selected panels
+        $permissions = Permission::whereIn('panel', $panelNames)->get();
 
         // Prepare permissions array with active field set to false by default
         $permissionsWithPivot = [];
-        foreach ($allPermissions as $permission) {
+        foreach ($permissions as $permission) {
             $permissionsWithPivot[$permission->id] = ['active' => false];
         }
 
-        // Attach all permissions to the newly created role with active = false
+        // Attach only the selected panels' permissions to the newly created role with active = false
         $this->record->permissions()->attach($permissionsWithPivot);
     }
 }

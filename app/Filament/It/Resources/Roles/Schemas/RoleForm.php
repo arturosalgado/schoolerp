@@ -32,6 +32,7 @@ class RoleForm
                     ->columnSpanFull(),
 
                 Toggle::make('is_active')->label('Activo')
+                    ->default(true)
                     ->required(),
                 Hidden::make('school_id')->default(school_id())
                 ,
