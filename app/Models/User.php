@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Services\AuthorizationService;
 use Illuminate\Database\Eloquent\Model;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -83,7 +84,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     }
 
     public function canAccessPanel(Panel $panel): bool{
-        return true;
+        //return true;
+        return AuthorizationService::canAccessPanel($this, $panel->getId());
+
     }
 
 

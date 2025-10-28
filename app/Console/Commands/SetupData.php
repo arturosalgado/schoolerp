@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\CreateRootUser;
 use App\Actions\Seeders\BloodSeeder;
+use App\Actions\Seeders\PanelSeeder;
 use App\Actions\Seeders\StatesSeeder;
 use Illuminate\Console\Command;
 
@@ -39,5 +40,11 @@ class SetupData extends Command
         $this->info('Seeding Blood Types...');
         BloodSeeder::run();
         $this->info('Blood Types Completed.');
+
+        $this->info('Seeding Panels...');
+        PanelSeeder::run();
+        $this->info('Panels Completed.');
+
+
     }
 }
