@@ -66,6 +66,7 @@ class PermissionsRelationManager extends RelationManager
             ->heading('Permisos')
             ->persistSortInSession()
             ->recordTitleAttribute('description')
+
             ->columns([
 
                 TextColumn::make('resource_es')->formatStateUsing(
