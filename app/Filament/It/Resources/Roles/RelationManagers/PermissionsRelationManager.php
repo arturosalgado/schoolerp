@@ -66,7 +66,15 @@ class PermissionsRelationManager extends RelationManager
             ->heading('Permisos')
             ->persistSortInSession()
             ->recordTitleAttribute('description')
+            ->modifyQueryUsing(function ($query) {
+                // Get the panels associated with the current role
+                $rolePanels = $this->ownerRecord->panels()->pluck('panels.name')->toArray();
 
+                // Filter permissions to only show those from the role's panels
+                if (!empty($rolePanels)) {
+                    $query->whereIn('permissions.panel', $rolePanels);
+                }
+            })
             ->columns([
 
                 TextColumn::make('resource_es')->formatStateUsing(

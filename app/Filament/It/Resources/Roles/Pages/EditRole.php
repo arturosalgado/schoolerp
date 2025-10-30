@@ -21,24 +21,37 @@ class EditRole extends EditRecord
 
     protected function afterSave(): void
     {
-
-        $panelIds = $this->data['panels'];
-
         // Get the panel names from the selected panel IDs
+        $panelIds = $this->data['panels'];
         $panelNames = \App\Models\Panel::whereIn('id', $panelIds)->pluck('name')->toArray();
 
-        // Get permissions only for the selected panels
-        $permissions = Permission::whereIn('panel', $panelNames)->get();
+        // Get all permissions for the selected panels
+        $permissionsForPanels = Permission::whereIn('panel', $panelNames)->get();
 
-        $permissionsWithPivot = [];
-        foreach ($permissions as $permission) {
-            $permissionsWithPivot[$permission->id] = ['active' => false];
+        // Get current permissions with their active status
+        $currentPermissions = $this->record->permissions()
+            ->get()
+            ->keyBy('id')
+            ->map(fn($permission) => $permission->pivot->active);
+
+        // Build the sync array
+        $permissionsToSync = [];
+        foreach ($permissionsForPanels as $permission) {
+            // If permission already exists, preserve its active status
+            if ($currentPermissions->has($permission->id)) {
+                $permissionsToSync[$permission->id] = ['active' => $currentPermissions->get($permission->id)];
+            } else {
+                // New permission, set as inactive by default
+                $permissionsToSync[$permission->id] = ['active' => false];
+            }
         }
 
-        // Attach only the selected panels' permissions to the newly created role with active = false
-        $this->record->permissions()->sync($permissionsWithPivot);
+        $s = 'electrónico';
 
+        // Sync permissions - this will add new ones and remove ones not in the array
+        $this->record->permissions()->sync($permissionsToSync);
 
+        // Redirect to refresh the page
         $this->redirect(static::getResource()::getUrl('edit', ['record' => $this->record->id]));
     }
 }
