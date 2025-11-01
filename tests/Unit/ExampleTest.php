@@ -19,7 +19,7 @@ class ExampleTest extends TestCase
 
 
         $roles = RolesService::$roles;
-        
+
 
 
     }

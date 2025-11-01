@@ -17,7 +17,8 @@ class SeedRoles
             $roles = Role::firstOrCreate([
                 'name'=>$role,
                 'system'=>true,
-                'level'=>'admin'
+                'level'=>'admin',
+                'label_es'=>$label,
             ]);
         }
     }
