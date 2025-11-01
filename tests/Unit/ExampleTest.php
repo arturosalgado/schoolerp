@@ -6,6 +6,7 @@ use App\Jobs\ProcessStudentPhotos;
 use App\Models\Student;
 #use PHPUnit\Framework\TestCase;
 use App\Services\PermissionsService;
+use App\Services\RolesService;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -17,9 +18,8 @@ class ExampleTest extends TestCase
     {
 
 
-        $permissions = PermissionsService::getPermissions();
-        dd($permissions);
-
+        $roles = RolesService::$roles;
+        
 
 
     }
