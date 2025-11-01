@@ -63,6 +63,7 @@ class PermissionsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->defaultSort('resource')
             ->heading('Permisos')
             ->persistSortInSession()
             ->recordTitleAttribute('description')

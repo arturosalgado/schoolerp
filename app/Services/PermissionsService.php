@@ -4,22 +4,22 @@ namespace App\Services;
 
 class PermissionsService
 {
-    protected  $panels = ['admin','it'];
+    protected static $panels = ['admin','it'];
 
-    protected $actions = ['create','viewAny','update','delete'];
+    protected static $actions = ['create'=>'Crear','viewAny'=>'Ver','update'=>'Editar','delete'=>'Eliminar'];
 
-    protected $resources = [ 'it'=>
-                                        [ 'students','roles','users'],
+    protected static $resources = [ 'it'=>
+                                        [ 'students'=>'Alumnos','users'=>'Usuarios'],
                              'admin'=>
-                                        [ 'students','roles','users']
+                                        [ 'students'=>'Alumnos','users'=>'Usuarios']
                             ];
 
-    function getPermissions(){
+    public static function getPermissions(){
         $out = [];
-        foreach($this->panels as $panel){
-            foreach($this->actions as $action){
-                foreach($this->resources[$panel] as $resource){
-                  $out[] = ['panel'=>$panel,'action'=>$action,'resource'=>$resource];
+        foreach(self::$panels as $panel){
+            foreach(self::$actions as $action=>$actionLabel){
+                foreach(self::$resources[$panel] as $resource=>$label){
+                  $out[] = ['panel'=>$panel,'action'=>$action,'resource'=>$resource,'resource_es'=>$label,'action_es'=>$actionLabel];
                 }
             }
         }
