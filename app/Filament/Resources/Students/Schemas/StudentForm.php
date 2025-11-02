@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Students\Schemas;
 use App\Filament\Clusters\Products\Resources\Brands\RelationManagers\ProductsRelationManager;
 use App\Models\Shop\Product;
 use App\Schemas\Students\StudentSections;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -27,35 +28,22 @@ class StudentForm
 {
     public static function configure(Schema $schema): Schema
     {
-
-
-
-
+        $panel = Filament::getCurrentPanel()->getId();
+        //dd($panel);
         return $schema
             ->components([
-                StudentSections::getPersonalData()
-                ->columnSpan(
-                    [
-                        'xl' => 8,
-                        '2xl' => 10 ,
-                    ]
-                )
+
+                StudentSections::getPersonalData($panel)->columnSpan(2)
                 ,
-               StudentSections::getContactData()
-                ->columnSpan([
-                    'xl' => 2,
-                    '2xl' => 6,
-                ])
+                StudentSections::getPhoto($panel)->columnSpan(1),
+                StudentSections::getContactData($panel)->columnSpan(3),
+                StudentSections::getProgramsOfStudy()->columnSpan(3),
 
-              ,Textarea::make('notes')->columnSpanFull(),
-            ])
+            ])->columns([
+                'xl' =>3,
+                '2xl' => 3,
+            ]);
 
-            ->columns(
-                [
-                    'xl' => 10,
-                    '2xl' => 16 ,
-                ]
-            ); // Creates 3-column grid on wide screens
     }
 
 
