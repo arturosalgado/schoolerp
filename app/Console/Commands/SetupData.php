@@ -47,13 +47,11 @@ class SetupData extends Command
         PanelSeeder::run();
         $this->info('Panels Completed.');
 
-        $this->info('Seeding Permissions...');
+        $this->info('Seeding Permissions...Permissions dont depend on school');
         SeedPermissions::run();
         $this->info('Seeding Permissions Completed....');
 
-        $this->info('Seeding Permissions...');
-        SeedRoles::run();
-        $this->info('Seeding Permissions Completed....');
+
 
 
 

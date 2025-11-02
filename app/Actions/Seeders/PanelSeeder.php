@@ -13,7 +13,7 @@ class PanelSeeder
 
     public function handle()
     {
-        $panels = ['admin'=>'Admin','it'=>'TI'];
+        $panels = ['admin'=>'Admin','it'=>'Informatica','finance'=>'Finanzas'];
 
         foreach ($panels as $panel=>$label){
             Panel::firstOrCreate([

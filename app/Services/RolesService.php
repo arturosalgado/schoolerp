@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Services;
-
+// se decidio que los roles van por escuela : Admin , IT , Finance, aunqque se repitan , pero se van a marcar como de sistema
 class RolesService
 {
     public static array $roles=[
-        'admin'=>['label'=>'Administrador'],
-        'it'=>['label'=>'IT'],
-        'finance'=>['label'=>'Finanzas'],
+        'admin'=>'Administrador',
+        'it'=>'Informatica',
+        'finance'=>'Finanzas',
     ];
 }

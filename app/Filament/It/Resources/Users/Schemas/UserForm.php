@@ -21,7 +21,7 @@ class UserForm
                     Select::make('roles')
                         ->label('Roles')
                         ->multiple()
-                        ->relationship('roles', 'name')
+                        ->relationship('roles', 'label_es')
                         ->preload()
                         ->searchable(),
                 ])->columnSpanFull()

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\SchoolCreatedActions;
 use App\Actions\Seeders\SeedProgramLevels;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,7 +34,10 @@ class School extends Model
 
         static::created(function ($school) {
             // Seed default program levels for the new school
-            SeedProgramLevels::run($school->id);
+            //dd(auth()->id());
+            SchoolCreatedActions::run($school->id, auth()->id());
+
+
         });
     }
 

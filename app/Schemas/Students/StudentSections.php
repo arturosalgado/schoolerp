@@ -172,7 +172,7 @@ class StudentSections
 
 
                 'xl' => 4,
-                '2xl' => 5,
+                '2xl' => 4,
             ]);
 
         return $section;

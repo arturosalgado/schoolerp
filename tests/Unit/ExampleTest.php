@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Actions\Seeders\SeedRoles;
 use App\Jobs\ProcessStudentPhotos;
 use App\Models\Student;
 #use PHPUnit\Framework\TestCase;
@@ -20,6 +21,8 @@ class ExampleTest extends TestCase
 
         $roles = RolesService::$roles;
 
+        SeedRoles::run();
+        dd($roles);
 
 
     }

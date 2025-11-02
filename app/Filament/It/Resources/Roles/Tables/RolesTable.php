@@ -18,7 +18,7 @@ class RolesTable
         return $table
             ->defaultPaginationPageOption(50)
             ->columns([
-                TextColumn::make('name')->label('Nombre')
+                TextColumn::make('label_es')->label('Nombre')
                     ->searchable(),
 
                 IconColumn::make('is_active')->label('Activo')
@@ -37,7 +37,12 @@ class RolesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->visible(function ($record) {
+                    if ($record->system){
+                        return false;
+                    }
+                    return true;
+                }),
                 ReplicateAction::make()->label('Duplicar')
                     ->beforeReplicaSaved(function ($replica, $record) {
                         // Generate a unique name to avoid constraint violations
@@ -77,7 +82,12 @@ class RolesTable
                         }
                     })
                     ->successNotificationTitle('Role replicated successfully'),
-                DeleteAction::make(),
+                DeleteAction::make()->visible(function ($record) {
+                    if ($record->system){
+                        return false;
+                    }
+                    return true;
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

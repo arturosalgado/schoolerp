@@ -14,7 +14,7 @@ use Filament\Tables\Table;
 use Filament\Actions\Action;
 class StudentTable
 {
-    public static function getTable(Table $table,String $panel):Table
+    public static function getTable(Table $table,String $panel='admin'):Table
     {
         $isCardConfiged = IdCardConfig::where('school_id',school_id())->exists();
         $actions = [

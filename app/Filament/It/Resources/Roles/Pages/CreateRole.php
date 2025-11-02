@@ -9,7 +9,12 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRole extends CreateRecord
 {
     protected static string $resource = RoleResource::class;
+    protected function mutateFormDataBeforeCreate(array $data): array{
 
+        ////dd($data);
+        $data['label_es']=$data['name'];
+        return $data;
+    }
     protected function afterCreate(): void
     {
 
@@ -24,7 +29,7 @@ class CreateRole extends CreateRecord
         // Prepare permissions array with active field set to false by default
         $permissionsWithPivot = [];
         foreach ($permissions as $permission) {
-            $permissionsWithPivot[$permission->id] = ['active' => false];
+            $permissionsWithPivot[$permission->id] = ['active' => true];
         }
 
         // Attach only the selected panels' permissions to the newly created role with active = false

@@ -19,6 +19,7 @@ class RoleForm
             ->components([
                 TextInput::make('name')->label('Nombre')
                     ->required()
+
                     ->unique(table: 'roles', column: 'name', ignoreRecord: true),
 
 
