@@ -36,7 +36,7 @@ class StudentForm
                 StudentSections::getPersonalData($panel)->columnSpan(2)
                 ,
                 StudentSections::getPhoto($panel)->columnSpan(1),
-                StudentSections::getContactData($panel)->columnSpan(3),
+                StudentSections::getContactData($panel  )->columnSpan(3),
                 StudentSections::getProgramsOfStudy()->columnSpan(3),
 
             ])->columns([
