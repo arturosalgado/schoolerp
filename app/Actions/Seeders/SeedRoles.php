@@ -32,7 +32,8 @@ class SeedRoles
             $role->panels()->sync(Panel::where('name',$panel)->pluck('id'));
             $this->attachPermissions($role,$panel);
 
-            if ($user->id){
+            //dd($user);
+            if (isset($user->id)){
                // dd($user_id);
                 $role->users()->sync($user->id);
             }

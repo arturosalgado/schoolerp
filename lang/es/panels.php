@@ -2,7 +2,7 @@
 
 return [
     'information-technology' => 'Tecnología de la Información',
-    'it'=>'Informatica',
+    'it'=>'Informática',
     'admin' => 'Administración',
     'super' => 'Super Administrador',
     'academic' => 'Académico',

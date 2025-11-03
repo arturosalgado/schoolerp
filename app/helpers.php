@@ -13,10 +13,10 @@ if (!function_exists('tenant')) {
 // Our custom MyActivityLogger and MyPendingActivityLog are bound in ActivityLogServiceProvider
 
 if (!function_exists('aLog')) {
-    function aLog($message,$causer = null,$model = null,$event = null,$properties=[])
+    function aLog($school_id, $message,$causer = null,$model = null,$event = null,$properties=[])
     {
         $log = activity()
-            ->school_id(school_id())
+            ->school_id($school_id)
             ->level('system')
             ->causedBy($causer);                     // who
 

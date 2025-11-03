@@ -14,7 +14,7 @@ class ActivityForm
         return $schema
             ->components([
                 Select::make('school_id')
-                    ->relationship('school', 'id'),
+                    ->relationship('school', 'slug'),
                 TextInput::make('level'),
                 TextInput::make('log_name'),
                 Textarea::make('description')

@@ -5,6 +5,7 @@ namespace App\Filament\It\Resources\Activities\Pages;
 use App\Filament\It\Resources\Activities\ActivityResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListActivities extends ListRecords
 {
@@ -16,4 +17,6 @@ class ListActivities extends ListRecords
             CreateAction::make(),
         ];
     }
+
+
 }

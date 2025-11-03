@@ -21,11 +21,11 @@ class IdCardConfigResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
 
-    protected static ?string $navigationLabel = 'Configuración de Credenciales';
+    protected static ?string $navigationLabel = 'Config. Credenciales';
 
-    protected static ?string $modelLabel = 'Configuración de Credencial';
+    protected static ?string $modelLabel = 'Config. Credencial';
 
-    protected static ?string $pluralModelLabel = 'Configuraciones de Credenciales';
+    protected static ?string $pluralModelLabel = 'Config. de Credenciales';
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -6,7 +6,7 @@ class RolesService
 {
     public static array $roles=[
         'admin'=>'Administrador',
-        'it'=>'Informatica',
+        'it'=>'Informática',
         'finance'=>'Finanzas',
     ];
 }

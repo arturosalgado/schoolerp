@@ -14,10 +14,8 @@ class SchoolCreatedActions
     {
         SeedRoles::run($school, $user);
 
+        aLog($school->id,'roles seeded for recently create school ',$user,$school,'school_created');
 
-        aLog('Escuela creada',$user,$school,'school.created',[
-            'school' => $school,
-        ]);
 
 
         SeedProgramLevels::run($school);
