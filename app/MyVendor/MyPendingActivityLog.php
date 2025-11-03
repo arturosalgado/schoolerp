@@ -9,7 +9,7 @@ class MyPendingActivityLog extends PendingActivityLog
 {
     public function school_id($id): static
     {
-        /** @var MyActivityLogger $logger */
+        /** @var MyActivityLogger $logger ssss*/
         $logger = $this->logger;
         $logger->school_id($id);
         return $this;
