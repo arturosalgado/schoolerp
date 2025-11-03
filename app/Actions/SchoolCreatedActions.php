@@ -10,9 +10,18 @@ class SchoolCreatedActions
 {
     use AsAction;
 
-    public function handle($school_id, $user_id = null)
+    public function handle($school, $user = null)
     {
-        SeedRoles::run($school_id, $user_id);
-        SeedProgramLevels::run($school_id);
+        SeedRoles::run($school, $user);
+
+
+        aLog('Escuela creada',$user,$school,'school.created',[
+            'school' => $school,
+        ]);
+
+
+        SeedProgramLevels::run($school);
+
+
     }
 }

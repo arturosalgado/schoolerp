@@ -9,6 +9,26 @@ if (!function_exists('tenant')) {
         return Filament::getTenant();
     }
 }
+// Note: activity() helper is provided by Spatie\Laravel-Activitylog
+// Our custom MyActivityLogger and MyPendingActivityLog are bound in ActivityLogServiceProvider
+
+if (!function_exists('aLog')) {
+    function aLog($message,$causer = null,$model = null,$event = null,$properties=[])
+    {
+        $log = activity()
+            ->school_id(school_id())
+            ->level('system')
+            ->causedBy($causer);                     // who
+
+        if ($model) {
+            $log->performedOn($model);              // on what model
+        }
+
+        $log->event($event)                          // optional custom event name
+            ->withProperties($properties)
+            ->log($message);
+    }
+}
 
 if (!function_exists('subdomain')) {
     function subdomain()

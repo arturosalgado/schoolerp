@@ -13,10 +13,11 @@ class SeedRoles
 {
     use AsAction;
 
-    public function handle($school_id=null, $user_id=null)
+    public function handle($school, $user)
     {
 
         $roles = RolesService::$roles;
+        //dd($school_id);
         //dd($roles);
         foreach ($roles as $panel=>$label){
             //dd($label);
@@ -25,15 +26,15 @@ class SeedRoles
                 'system'=>true,
                 'level'=>'admin',
                 'label_es'=>$label,
-                'school_id'=>$school_id,
+                'school_id'=>$school->id,
             ]);
 
             $role->panels()->sync(Panel::where('name',$panel)->pluck('id'));
             $this->attachPermissions($role,$panel);
 
-            if ($user_id){
+            if ($user->id){
                // dd($user_id);
-                $role->users()->sync($user_id);
+                $role->users()->sync($user->id);
             }
 
         }

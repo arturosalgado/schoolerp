@@ -10,13 +10,13 @@ class SeedProgramLevels
 {
     use AsAction;
 
-    public function handle($school_id)
+    public function handle($school)
     {
         foreach (ProgramLevelService::$levels as $level){
             ProgramLevel::firstOrCreate(
                 [
                     'name'=>$level,
-                    'school_id'=>$school_id,
+                    'school_id'=>$school->id,
                 ]
             );
         }

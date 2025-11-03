@@ -35,7 +35,7 @@ class School extends Model
         static::created(function ($school) {
             // Seed default program levels for the new school
             //dd(auth()->id());
-            SchoolCreatedActions::run($school->id, auth()->id());
+            SchoolCreatedActions::run($school, auth()->getUser());
 
 
         });
