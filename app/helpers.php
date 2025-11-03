@@ -71,7 +71,7 @@ if (!function_exists('local')) {
 
 if (!function_exists('school_id')) {
     function school_id($default = 1):int{ // default should work only for dev
-
+//        return 1;
         $tenant = null;
 
         $tenant = Filament::getTenant();
@@ -97,7 +97,7 @@ if (!function_exists('school_id')) {
             return $school->id;
         }
         catch (Exception $exception){
-            echo 'db may not be initialized';
+            echo 'dddb may not be initialized';
         }
 
         return $default;
