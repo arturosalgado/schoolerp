@@ -75,6 +75,9 @@ class Student extends Model
             if ($model->school_id){
                 $u->schools()->syncWithoutDetaching([$model->school_id]);
             }
+
+            aLog($model->school_id,'Alumno creado',auth()->getUser(),$model,'student.created');
+
         });
 
         static::updating(function ($model) {

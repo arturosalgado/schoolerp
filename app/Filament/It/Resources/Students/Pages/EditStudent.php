@@ -23,25 +23,26 @@ class EditStudent extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
+        // Eager load relationships to avoid N+1 queries
+        $this->record->load(['programs', 'studyPlans', 'terminals']);
+
         // Load existing programs with their pivot data
-        $programs = $this->record->programs()
-            ->withPivot(['is_current', 'enrolled_at', 'completed_at'])
-            ->get();
+        $programs = $this->record->programs;
 
         $programsData = [];
 
         foreach ($programs as $program) {
             // Get the active study plan for this program
-            $studyPlan = $this->record->studyPlans()
-                ->where('student_study_plan.program_id', $program->id)
-                ->where('student_study_plan.is_active', true)
+            $studyPlan = $this->record->studyPlans
+                ->where('pivot.program_id', $program->id)
+                ->where('pivot.is_active', true)
                 ->first();
 
             // Get the terminal for this study plan if it exists
             $terminal = null;
             if ($studyPlan) {
-                $terminal = $this->record->terminals()
-                    ->where('student_terminal.study_plan_id', $studyPlan->id)
+                $terminal = $this->record->terminals
+                    ->where('pivot.study_plan_id', $studyPlan->id)
                     ->first();
             }
 
@@ -49,7 +50,7 @@ class EditStudent extends EditRecord
                 'program_id' => $program->id,
                 'study_plan_id' => $studyPlan?->id,
                 'terminal_id' => $terminal?->id,
-                'is_current' => $program->pivot->is_current ? 1 : 0,
+                'is_current' => (int) $program->pivot->is_current,
                 'enrolled_at' => $program->pivot->enrolled_at,
                 'completed_at' => $program->pivot->completed_at,
             ];
