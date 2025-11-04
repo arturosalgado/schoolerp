@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Models\School;
+use App\MyFilament\MyAccountWidget;
 use App\MyFilament\MyAdminLogin;
 use App\MyFilament\RegisterSchool;
 use Filament\Http\Middleware\Authenticate;
@@ -25,7 +26,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class ItPanelProvider extends PanelProvider
 {
-    public function panel(Panel $panel): Panel
+public function panel(Panel $panel): Panel
     {
         return $panel
             ->id('it')
@@ -45,7 +46,7 @@ class ItPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/It/Widgets'), for: 'App\Filament\It\Widgets')
             ->widgets([
-                AccountWidget::class,
+                MyAccountWidget::class,
 
             ])
             ->middleware([
