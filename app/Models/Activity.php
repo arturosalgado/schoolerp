@@ -14,5 +14,23 @@ class Activity extends SpatieActivity
         return $this->belongsTo(School::class);
     }
 
+    /**
+     * Get the human-readable label for a subject type.
+     */
+    public static function getSubjectTypeLabel(?string $subjectType): string
+    {
+        if (!$subjectType) {
+            return '-';
+        }
 
+        return config("model_labels.{$subjectType}") ?? class_basename($subjectType);
+    }
+
+    /**
+     * Get the human-readable label for a causer type.
+     */
+    public static function getCauserTypeLabel(?string $causerType): string
+    {
+        return self::getSubjectTypeLabel($causerType);
+    }
 }

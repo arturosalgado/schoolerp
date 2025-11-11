@@ -76,7 +76,7 @@ class Student extends Model
                 $u->schools()->syncWithoutDetaching([$model->school_id]);
             }
 
-            aLog($model->school_id,'Alumno creado',auth()->getUser(),$model,'student.created');
+
 
         });
 
@@ -97,7 +97,7 @@ class Student extends Model
                         $updateData['email'] = $model->email;
                     }
 
-                    // Only update password if it was provided (not empty) and changed
+                    // Only up      date password if it was provided (not empty) and changed
                     if (!empty($model->password) && $model->isDirty('password')) {
                         $updateData['password'] = Hash::make($model->password);
                     }
@@ -108,6 +108,14 @@ class Student extends Model
                 }
             }
         });
+
+        static::created(function ($model) {
+            $model->refresh();
+            aLog($model->school_id,"Alumno: $model creado con identificador: Alumno-{$model->id}.",auth()->getUser(),$model,'student.created');
+        });
+
+
+
     }
 
 
@@ -195,6 +203,12 @@ class Student extends Model
         return $this->belongsToMany(Terminal::class)
             ->withPivot(['study_plan_id'])
             ->withTimestamps();
+    }
+
+
+    public function __toString(): string
+    {
+       return "$this->full_name";
     }
 
 }

@@ -19,26 +19,10 @@ class ActivitiesTable
         return $table
             ->defaultSort('id', 'desc')
             ->columns([
-                TextColumn::make('school.id')
+
+                TextColumn::make('description')->label("Descripción")
                     ->searchable(),
-                TextColumn::make('level')
-                    ->searchable(),
-                TextColumn::make('log_name')
-                    ->searchable(),
-                TextColumn::make('subject_type')
-                    ->searchable(),
-                TextColumn::make('event')
-                    ->searchable(),
-                TextColumn::make('subject_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('causer_type')
-                    ->searchable(),
-                TextColumn::make('causer_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('batch_uuid')
-                    ->searchable(),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -49,16 +33,6 @@ class ActivitiesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-
-
-
-
-
-
-
-
-
-
 
             ])
             ->recordActions([

@@ -11,27 +11,30 @@ class ActivityInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('school.id')
-                    ->label('School')
-                    ->placeholder('-'),
-                TextEntry::make('level')
-                    ->placeholder('-'),
-                TextEntry::make('log_name')
-                    ->placeholder('-'),
+
+
                 TextEntry::make('description')
                     ->columnSpanFull(),
-                TextEntry::make('subject_type')
-                    ->placeholder('-'),
                 TextEntry::make('event')
                     ->placeholder('-'),
-                TextEntry::make('subject_id')
-                    ->numeric()
+
+                // Causer (User who performed the action)
+                TextEntry::make('causer.name')
+                    ->label('Performed By')
                     ->placeholder('-'),
-                TextEntry::make('causer_type')
+                TextEntry::make('causer.email')
+                    ->label('Email')
                     ->placeholder('-'),
-                TextEntry::make('causer_id')
-                    ->numeric()
+
+                // Subject (Student or other model that was affected)
+                TextEntry::make('subject_type')
+                    ->label('Tipo de Sujeto')
+                    ->formatStateUsing(fn (?string $state): string => \App\Models\Activity::getSubjectTypeLabel($state))
                     ->placeholder('-'),
+                TextEntry::make('subject.full_name')
+                    ->label('Student Name')
+                    ->placeholder('-')
+                    ->visible(fn ($record) => $record->subject_type === 'App\\Models\\Student'),
                 TextEntry::make('batch_uuid')
                     ->placeholder('-'),
                 TextEntry::make('created_at')
