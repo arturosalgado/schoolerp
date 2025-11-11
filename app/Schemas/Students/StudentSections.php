@@ -3,6 +3,7 @@
 namespace App\Schemas\Students;
 
 use App\Services\SchoolFileUploadService;
+use App\Services\CurpService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
@@ -14,6 +15,56 @@ use Filament\Schemas\Components\Section;
 
 class StudentSections
 {
+    private static function generateCurpIfPossible(callable $set, callable $get): void
+    {
+        // Check if CURP is already filled
+        $curp = $get('curp');
+        if (!empty($curp)) {
+            return;
+        }
+
+        // Get all required fields
+        $firstName = $get('name');
+        $lastName = $get('last_name');
+        $secondLastName = $get('second_last_name');
+        $birthDate = $get('dob');
+        $gender = $get('sex');
+        $stateId = $get('state_id');
+
+        // Check if all dependencies are filled
+        if (empty($firstName) || empty($lastName) || empty($birthDate) || empty($gender) || empty($stateId)) {
+            return;
+        }
+
+        // If second_last_name is empty, use 'X' as default
+        if (empty($secondLastName)) {
+            $secondLastName = 'X';
+        }
+
+        try {
+            // Get the state name from state_id
+            $state = \App\Models\State::find($stateId);
+            if (!$state) {
+                return;
+            }
+
+            // Generate CURP using the service
+            $curpService = new CurpService(
+                $firstName,
+                $lastName,
+                $secondLastName,
+                $birthDate,
+                $gender,
+                $state->name
+            );
+
+            $generatedCurp = $curpService->generate();
+            $set('curp', $generatedCurp);
+        } catch (\Exception $e) {
+            // If CURP generation fails, silently do nothing
+            // You could log this error if needed
+        }
+    }
 
     public static function getPersonalData($panel=null ):Section{
 
@@ -24,17 +75,28 @@ class StudentSections
                     ->required()
                     ->label('Apellido Paterno')
                     ->maxLength(255)
-                ->columnSpan(1)
+                    ->columnSpan(1)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
                 ,
                 TextInput::make('second_last_name')
-                    //  ->required()
                     ->label('Apellido Materno')
                     ->maxLength(255)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
                 ,
                 TextInput::make('name')
                     ->label('Nombre(s)')
                     ->required()
                     ->maxLength(255)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
                 ,
 
 
@@ -47,6 +109,10 @@ class StudentSections
                         return true;
                     })
                     ->relationship('state', 'name')
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
 
 
                 ,
@@ -59,38 +125,48 @@ class StudentSections
                             return true;
                         }
                     )
-                    ->label('Fecha de Nacimiento'),
-
-
-                Radio::make('sex')->options([
-                    'male' => 'Masculino',
-                    'female' => 'Femenino'
-                ])->label('Genero')->required(
-                    function ($get) use ($panel) {
-                        if ($panel!=null and $panel == 'it') {
-                            return false;
-                        }
-                        return true;
-                    }
-                ),
-
-                TextInput::make('curp')->label('CURP')->required(function ($get) use ($panel) {
-                    if ($panel!=null and $panel == 'it') {
-                        return false;
-                    }
-                    return true;
-                })
-                ->maxLength(18)
+                    ->label('Fecha de Nacimiento')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
                 ,
-                Select::make('blood_type_id')->
-                    label('Tipo de Sangre')->
-                relationship('bloodType', 'name')
+
+
+                Radio::make('sex')
+                    ->options([
+                        'male' => 'Masculino',
+                        'female' => 'Femenino'
+                    ])
+                    ->label('Genero')
+                    ->required(
+                        function ($get) use ($panel) {
+                            if ($panel!=null and $panel == 'it') {
+                                return false;
+                            }
+                            return true;
+                        }
+                    )
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        static::generateCurpIfPossible($set, $get);
+                    })
+                ,
+
+                TextInput::make('curp')
+                    ->label('CURP')
                     ->required(function ($get) use ($panel) {
                         if ($panel!=null and $panel == 'it') {
                             return false;
                         }
                         return true;
-                    }),
+                    })
+                    ->maxLength(18)
+                ,
+                Select::make('blood_type_id')->
+                    label('Tipo de Sangre')->
+                relationship('bloodType', 'name')
+                    ,
 
             ],
 

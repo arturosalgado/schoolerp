@@ -3,9 +3,11 @@
 return [
     'id_card_configs'=>'Crendenciales',
     'students' => 'Alumnos',
+    'student' => 'Alumno',
     'roles' => 'Roles',
     'users' => 'Usuarios',
-    'teachers' => 'Profesores',
+    'teachers' => 'Docentes',
+    'teacher' => 'Docente',
     'courses' => 'Cursos',
     'groups' => 'Grupos',
     'subjects' => 'Materias',

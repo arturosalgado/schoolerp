@@ -24,6 +24,21 @@ class TeacherResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'full_name';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.teachers');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.teacher');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.teachers');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return TeacherForm::configure($schema);
