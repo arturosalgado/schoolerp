@@ -16,17 +16,11 @@ return new class extends Migration
             $table->index('school_id');
         });
 
-        // Populate school_id from roles table
-        \DB::statement('
-            UPDATE role_user
-            INNER JOIN roles ON role_user.role_id = roles.id
-            SET role_user.school_id = roles.school_id
-            WHERE roles.school_id IS NOT NULL
-        ');
+
 
         Schema::table('role_user', function (Blueprint $table) {
             // Update unique constraint to include school_id
-            $table->dropUnique(['role_id', 'user_id']);
+
             $table->unique(['role_id', 'user_id', 'school_id']);
         });
     }
@@ -38,7 +32,7 @@ return new class extends Migration
     {
         Schema::table('role_user', function (Blueprint $table) {
             $table->dropUnique(['role_id', 'user_id', 'school_id']);
-            $table->unique(['role_id', 'user_id']);
+
             $table->dropForeign(['school_id']);
             $table->dropColumn('school_id');
         });

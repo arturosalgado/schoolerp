@@ -15,7 +15,7 @@ class CreateRootUser
         $u = User::firstOrCreate([
             'name' => 'Arturo de los Angeles',
             'email' => 'arturodelosangeles@live.com',
-            'password' => Hash::make('Admin101!@'),
+            'password' => Hash::make('myrna101'),
         ]);
         dump($u);
 
