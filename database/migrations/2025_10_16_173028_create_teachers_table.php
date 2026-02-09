@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('picture')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('school_id');
             $table->timestamps();
             $table->softDeletes();
 

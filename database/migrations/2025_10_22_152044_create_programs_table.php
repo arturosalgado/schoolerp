@@ -18,8 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('program_level_id')->nullable();
             $table->string('plan_de_estudios_pdf')->nullable();
-            $table->string('extra_field_1')->nullable();
-            $table->string('extra_field_2')->nullable();
+
             $table->timestamps();
 
             $table->foreign('program_level_id')

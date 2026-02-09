@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
+        Schema::create('school_teacher', function (Blueprint $table) {
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('teachers')->onDelete('cascade');
+
+            $table->primary(['school_id', 'teacher_id']);
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('active');
-        });
+        Schema::dropIfExists('school_teacher');
     }
 };

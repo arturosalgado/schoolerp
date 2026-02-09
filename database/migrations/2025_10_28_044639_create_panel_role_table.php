@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('school_id')->nullable()->constrained('schools')->onDelete('cascade')->onUpdate('restrict');
 
-            $table->unique(['panel_id', 'role_id']);
+            $table->unique(['panel_id', 'role_id', 'school_id']);
         });
     }
 

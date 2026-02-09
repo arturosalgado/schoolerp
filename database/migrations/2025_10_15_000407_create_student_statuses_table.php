@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('active')->default(true);
+            $table->boolean('is_system')->default(false);
             $table->foreignId('school_id')->constrained()->onDelete('cascade');
             $table->timestamps();
             

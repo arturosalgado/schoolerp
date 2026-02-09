@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('system')->default(false);
-            $table->enum('level', ['student', 'admin', 'superadmin', 'teacher']);
+            $table->enum('level', ['student', 'admin', 'superadmin', 'teacher','academic','accountant'])->default('accountant');
             $table->text('description')->nullable();
             $table->integer('hierarchy_level')->default(0);
             $table->boolean('is_active')->default(true);

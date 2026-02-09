@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('mobile')->nullable();
             $table->string('notes')->nullable();
-            $table->foreignId('student_status_id')->nullable()->constrained('student_statuses');
+            $table->foreignId('student_status_id')->constrained('student_statuses');
             $table->foreignId('school_id')->constrained('schools');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('state_id')->nullable()->constrained('states');

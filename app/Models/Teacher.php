@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
@@ -43,7 +44,7 @@ use Illuminate\Support\Facades\Hash;
  * - teachers.email: NOT NULL (required field)
  * - teachers.mobile: NOT NULL (required field)
  * - teachers.user_id: Foreign key to users table
- * - teachers.school_id: Foreign key to schools table (multi-tenant)
+ * - teachers.schools: Many-to-many relationship via school_teacher pivot table
  *
  * @property string $email Duplicated email field (also in users.email)
  * @property string $mobile Teacher's mobile number
@@ -52,7 +53,6 @@ use Illuminate\Support\Facades\Hash;
  * @property string $second_last_name Teacher's maternal last name (nullable)
  * @property string $password Hashed password
  * @property int $user_id Foreign key to User model
- * @property int $school_id Foreign key to School model
  */
 class Teacher extends Model
 {
@@ -66,7 +66,6 @@ class Teacher extends Model
         'mobile',
         'password',
         'picture',
-        'school_id',
         'user_id'
     ];
 
@@ -95,10 +94,22 @@ class Teacher extends Model
                     'email' => $model->email
                 ]);
             $model->user_id = $u->id;
-            $u->assignRole('Docente',$model->school_id);
-
-            if ($model->school_id){
-                $u->schools()->syncWithoutDetaching([$model->school_id]);
+            
+            // Get school_id from request or use current school context
+            $schoolId = request()->input('school_id') ?? school_id();
+            
+            if ($schoolId) {
+                $u->assignRole('Docente', $schoolId);
+                $u->schools()->syncWithoutDetaching([$schoolId]);
+            }
+        });
+        
+        static::created(function ($model) {
+            // Attach teacher to schools after creation
+            $schoolId = request()->input('school_id') ?? school_id();
+            
+            if ($schoolId) {
+                $model->schools()->syncWithoutDetaching([$schoolId]);
             }
         });
 
@@ -136,9 +147,9 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function school(): BelongsTo
+    public function schools(): BelongsToMany
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsToMany(School::class, 'school_teacher');
     }
 
 

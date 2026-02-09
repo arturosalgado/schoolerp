@@ -22,8 +22,6 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
             $table->timestamps();
-            $table->json('student_field_config')->nullable();
-            $table->json('program_field_config')->nullable();
         });
     }
 

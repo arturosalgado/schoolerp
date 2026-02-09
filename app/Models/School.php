@@ -19,13 +19,6 @@ class School extends Model
         'email',
         'phone',
         'website',
-        'student_field_config',
-        'program_field_config',
-    ];
-
-    protected $casts = [
-        'student_field_config' => 'array',
-        'program_field_config' => 'array',
     ];
 
     protected static function boot()
@@ -64,5 +57,13 @@ class School extends Model
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);
+    }
+
+    /**
+     * Get the teachers for the school.
+     */
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(Teacher::class, 'school_teacher');
     }
 }
