@@ -6,6 +6,7 @@ use Filament\Pages\Tenancy\RegisterTenant;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use App\Models\School;
+use Illuminate\Support\Str;
 
 class RegisterSchool extends RegisterTenant
 {
@@ -19,7 +20,16 @@ class RegisterSchool extends RegisterTenant
     {
         return $schema
             ->components([
+                TextInput::make('full_name')
+                    ->label('School Name')
+                    ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('slug', Str::slug($state));
+                    }),
                 TextInput::make('slug')
+                    ->label('Slug')
+                    ->readOnly()
                     ->unique('schools', 'slug')
                 ,
                 // ...
