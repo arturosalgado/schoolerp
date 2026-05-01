@@ -96,7 +96,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     }
 
     public function canAccessPanel(Panel $panel): bool{
-        //return true;
+        return true;
         return AuthorizationService::canAccessPanel($this, $panel->getId());
 
     }

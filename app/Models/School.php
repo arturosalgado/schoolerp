@@ -26,9 +26,14 @@ class School extends Model
         parent::boot();
 
         static::created(function ($school) {
+
+
+            // dd($school);// checked, it does bring the just created school.
             // Seed default program levels for the new school
             //dd(auth()->id());
-            SchoolCreatedActions::run($school, auth()->getUser());
+            //dd(auth()->guard()->user());//checked it does have the user that created the school, so we can pass it to the actions for logging purposes
+            SchoolCreatedActions::run($school, auth()->guard()->user());
+
 
 
         });
