@@ -14,6 +14,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('last_name')->nullable();
+            $table->string('second_last_name')->nullable();
+            $table->string('curp', 18)->nullable();
+            $table->string('rfc', 13)->nullable();
+            $table->date('dob')->nullable();
+            $table->enum('sex', ['male', 'female'])->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('emergency_name')->nullable();
+            $table->string('emergency_phone')->nullable();
+            $table->foreignId('blood_type_id')->nullable()->constrained('blood_types');
+            $table->foreignId('state_id')->nullable()->constrained('states');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

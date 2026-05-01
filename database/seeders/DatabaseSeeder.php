@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        dump('seeding database...');
+        dump('seeding states...');
+        StatesSeeder::run();
+        dump('seeding blood types...');
+        BloodSeeder::run();
+
         $this->call([
             RolesSeeder::class,
             PermissionsSeeder::class,
@@ -24,8 +30,7 @@ class DatabaseSeeder extends Seeder
             TestUsers::class,
         ]);
 
-        StatesSeeder::run();
-        BloodSeeder::run();
+       
 
         // User::factory(10)->create();
 

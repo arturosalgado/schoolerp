@@ -43,9 +43,7 @@ class SetupData extends Command
         BloodSeeder::run();
         $this->info('Blood Types Completed.');
 
-        $this->info('Seeding Panels...');
-        PanelSeeder::run();
-        $this->info('Panels Completed.');
+       
 
         $this->info('Seeding Permissions...Permissions dont depend on school');
         SeedPermissions::run();

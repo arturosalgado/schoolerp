@@ -3,20 +3,19 @@
 namespace App\Actions;
 
 use App\Actions\Seeders\DocumentSeeder;
-use App\Actions\Seeders\PanelSeeder;
+
 use App\Actions\Seeders\SeedProgramLevels;
 use App\Actions\Seeders\SeedRoles;
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Models\School;
 
 class SchoolCreatedActions
 {
     use AsAction;
 
-    public function handle($school, $user = null)
+    public function handle(School $school, $user = null)
     {
-        PanelSeeder::run();
-
-        SeedRoles::run($school, $user);
+         SeedRoles::run($school, $user);
 
         aLog($school->id,'roles seeded for recently create school ',$user,$school,'school_created');
 
