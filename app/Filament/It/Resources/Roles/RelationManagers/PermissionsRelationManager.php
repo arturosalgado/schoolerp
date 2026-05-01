@@ -119,17 +119,6 @@ class PermissionsRelationManager extends RelationManager
                 ToggleColumn::make('active')
                     ->label('Activo')
                     ->updateStateUsing(function ($record, $state) {
-                        // Check if trying to deactivate a critical permission
-                        if (!$state && !$this->ownerRecord->canDeactivatePermission($record->name)) {
-                            // Prevent deactivation and show error
-                            \Filament\Notifications\Notification::make()
-                                ->title('No se puede desactivar')
-                                ->body('Este permiso es crítico para el rol y no puede ser desactivado.')
-                                ->danger()
-                                ->send();
-
-                            return true; // Keep it active
-                        }
                         // If activating edit or create, also activate viewAny for the same resource/panel
                         if ($state && in_array($record->action, ['update', 'create'])) {
                             $viewAnyPermission = Permission::where('resource', $record->resource)
@@ -151,13 +140,7 @@ class PermissionsRelationManager extends RelationManager
                         $pivot = $this->ownerRecord->permissions()->where('permissions.id', $record->id)->first()?->pivot;
                         return $pivot ? $pivot->active : false;
                     })
-                    ->disabled(function ($record) {
-                        // Disable toggle for critical permissions that are currently active
-                        $pivot = $this->ownerRecord->permissions()->where('permissions.id', $record->id)->first()?->pivot;
-                        $isActive = $pivot ? $pivot->active : false;
-
-                    return $isActive && !$this->ownerRecord->canDeactivatePermission($record->name);
-                    }),
+                    ,
             ])
             ->groups([
                 Group::make('panel')
@@ -264,35 +247,11 @@ class PermissionsRelationManager extends RelationManager
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->action(function (Collection $records) {
-                            $criticalPermissions = [];
-                            $deactivatedCount = 0;
-
                             foreach ($records as $permission) {
-                                if (!$this->ownerRecord->canDeactivatePermission($permission->name)) {
-                                    $criticalPermissions[] = $permission->description;
-                                } else {
-                                    $this->ownerRecord->permissions()->updateExistingPivot(
-                                        $permission->id,
-                                        ['active' => false]
-                                    );
-                                    $deactivatedCount++;
-                                }
-                            }
-
-                            // Show notifications
-                            if ($deactivatedCount > 0) {
-                                \Filament\Notifications\Notification::make()
-                                    ->title("$deactivatedCount permisos desactivados")
-                                    ->success()
-                                    ->send();
-                            }
-
-                            if (!empty($criticalPermissions)) {
-                                \Filament\Notifications\Notification::make()
-                                    ->title('Algunos permisos no se pudieron desactivar')
-                                    ->body('Los siguientes permisos son críticos: ' . implode(', ', $criticalPermissions))
-                                    ->warning()
-                                    ->send();
+                                $this->ownerRecord->permissions()->updateExistingPivot(
+                                    $permission->id,
+                                    ['active' => false]
+                                );
                             }
                         })
                         ->deselectRecordsAfterCompletion(),

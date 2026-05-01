@@ -8,5 +8,7 @@ class RolesService
         'admin'=>'Administrador',
         'it'=>'Informática',
         'finance'=>'Finanzas',
+       'teacher'=>'Docente',
+       'student'=>'Estudiante',
     ];
 }

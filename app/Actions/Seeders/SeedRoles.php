@@ -21,13 +21,17 @@ class SeedRoles
         //dd($roles);
         foreach ($roles as $panel=>$label){
             //dd($label);
-            $role = Role::firstOrCreate([
-                'name'=>$panel,
-                'system'=>true,
-                'level'=>'admin',
-                'label_es'=>$label,
-                'school_id'=>$school->id,
-            ]);
+            $role = Role::updateOrCreate(
+                [
+                    'name'=>$panel,
+                    'school_id'=>$school->id,
+                ],
+                [
+                    'system'=>true,
+                    'level'=>'admin',
+                    'label_es'=>$label,
+                ]
+            );
 
             $role->panels()->sync(Panel::where('name',$panel)->pluck('id'));
             $this->attachPermissions($role,$panel);

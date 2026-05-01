@@ -30,15 +30,22 @@ class UsersRelationManager extends RelationManager
     {
         return $schema
             ->schema([
-                TextInput::make('name')
-                    ->label('Nombre')
+                TextInput::make('nombres')
+                    ->label('Nombre(s)')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(80),
+                TextInput::make('paterno')
+                    ->label('Apellido Paterno')
+                    ->required()
+                    ->maxLength(80),
+                TextInput::make('materno')
+                    ->label('Apellido Materno')
+                    ->maxLength(80),
                 TextInput::make('email')
                     ->label('Email')
                     ->email()
                     ->required()
-                    ->unique('users', 'email')
+                    ->unique('users', 'email', ignoreRecord: true)
                     ->maxLength(255),
                 TextInput::make('password')
                     ->label('Contraseña')

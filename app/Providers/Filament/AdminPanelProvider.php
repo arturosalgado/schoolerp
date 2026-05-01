@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Models\School;
 use App\MyFilament\MyAdminLogin;
+use App\MyFilament\MyAdminRegister;
 use App\MyFilament\RegisterSchool;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -36,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenantRegistration(RegisterSchool::class)
             ->maxContentWidth(Width::Full)
             ->login(MyAdminLogin::class)
-            ->registration()
+            ->registration(MyAdminRegister::class)
             ->colors([
                 'primary' => Color::Amber,
             ])

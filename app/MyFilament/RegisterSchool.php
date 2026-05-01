@@ -6,7 +6,6 @@ use Filament\Pages\Tenancy\RegisterTenant;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use App\Models\School;
-use Illuminate\Support\Str;
 
 class RegisterSchool extends RegisterTenant
 {
@@ -21,11 +20,17 @@ class RegisterSchool extends RegisterTenant
         return $schema
             ->components([
                 TextInput::make('full_name')
-                    ->label('School Name')
+                    ->label(__('school_name'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, callable $set) {
-                        $set('slug', Str::slug($state));
+                        $stopWords = ['de', 'del', 'la', 'las', 'los', 'el', 'y', 'e', 'o', 'u', 'a', 'en', 'para', 'por', 'con', 'sin', 'sobre', 'entre'];
+                        $words = array_filter(
+                            explode(' ', trim($state)),
+                            fn($w) => $w !== '' && !in_array(strtolower($w), $stopWords)
+                        );
+                        $initials = implode('', array_map(fn($w) => strtolower($w[0]), $words));
+                        $set('slug', $initials);
                     }),
                 TextInput::make('slug')
                     ->label('Slug')
@@ -42,7 +47,6 @@ class RegisterSchool extends RegisterTenant
 
     protected function handleRegistration(array $data): School
     {
-       // dd($data);
         $school = School::create($data);
 
         $school->users()->attach(auth()->user());

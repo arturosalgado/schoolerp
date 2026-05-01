@@ -18,9 +18,24 @@ class UsersTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Nombre'),
-                TextColumn::make('email')->label('Correo Electrónico'),
-                ToggleColumn::make('active')->label('Activo')
+                TextColumn::make('nombres')
+                    ->label('Nombre(s)')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('paterno')
+                    ->label('Apellido Paterno')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('materno')
+                    ->label('Apellido Materno')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('email')
+                    ->label('Correo Electrónico')
+                    ->searchable()
+                    ->sortable(),
+                ToggleColumn::make('active')
+                    ->label('Activo')
             ])
             ->filters([
                 //

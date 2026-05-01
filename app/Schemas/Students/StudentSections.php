@@ -17,12 +17,6 @@ class StudentSections
 {
     private static function generateCurpIfPossible(callable $set, callable $get): void
     {
-        // Check if CURP is already filled
-        $curp = $get('curp');
-        if (!empty($curp)) {
-            return;
-        }
-
         // Get all required fields
         $firstName = $get('name');
         $lastName = $get('last_name');

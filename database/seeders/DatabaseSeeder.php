@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Seeders\BloodSeeder;
+use App\Actions\Seeders\StatesSeeder;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,6 +23,9 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             TestUsers::class,
         ]);
+
+        StatesSeeder::run();
+        BloodSeeder::run();
 
         // User::factory(10)->create();
 
