@@ -15,3 +15,29 @@ input.fi-input,
 .fi-section-header-heading {
     font-size: 1.20rem !important;
 }
+
+.fi-ta-text-item,
+.fi-ta-header-cell,
+.fi-ta-cell {
+    font-size: 1.20rem !important;
+}
+
+.fi-ta-placeholder {
+    font-size: 1.20rem !important;
+}
+
+.fi-sidebar-item-label {
+    font-size: 1.15rem !important;
+}
+
+.fi-sidebar-group-label {
+    font-size: 1.15rem !important;
+}
+
+.fi-tenant-menu-trigger-tenant-name {
+    font-size: 1.30rem !important;
+}
+
+.fi-sidebar-group-label {
+    font-size: 1.15rem !important;
+}
