@@ -29,18 +29,14 @@ class UsersTable
                     ->height(40)
                     ->width(40)
                     ->defaultImageUrl('data:image/svg+xml;base64,' . base64_encode('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="#e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-size="16">?</text></svg>')),
-                TextColumn::make('last_name')
-                    ->label('Apellido Paterno')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('second_last_name')
-                    ->label('Apellido Materno')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('name')
-                    ->label('Nombre(s)')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('full_name')
+                    ->label('Nombre')
+                    ->getStateUsing(fn ($record) => trim("{$record->last_name} {$record->second_last_name} {$record->name}"))
+                    ->searchable(query: fn ($query, $search) => $query->where(fn ($q) => $q
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('second_last_name', 'like', "%{$search}%")
+                    )),
                 TextColumn::make('email')
                     ->label('Correo Electrónico')
                     ->searchable()

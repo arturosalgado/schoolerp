@@ -41,3 +41,12 @@ input.fi-input,
 .fi-sidebar-group-label {
     font-size: 1.15rem !important;
 }
+
+.fi-badge {
+    font-size: 1.0rem !important;
+    padding: 0.25rem 0.65rem !important;
+}
+
+.fi-ta-actions .fi-link {
+    font-size: 1.0rem !important;
+}
