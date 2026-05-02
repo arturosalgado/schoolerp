@@ -7,6 +7,7 @@ use App\Actions\Seeders\SeedProgramLevels;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Role;
 
 class School extends Model
 {
@@ -70,5 +71,10 @@ class School extends Model
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'school_teacher');
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(Role::class);
     }
 }

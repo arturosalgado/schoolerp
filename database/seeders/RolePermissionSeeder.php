@@ -52,14 +52,16 @@ class RolePermissionSeeder extends Seeder
             ]
         ],
         'student'=>[
-            ['resource'=> 'grades',
-            'permissions'=>['viewAny','view']]
+            [
+                'resource'=> 'grades',
+                'permissions'=>['viewAny','view']
+            ]
         ],
         'prospect'=>[
             [
                 'resource'=>'prospects',
                 'permissions'=>['view','create','update']
-            ]  // no permissions
+            ]
         ],
     ];
 

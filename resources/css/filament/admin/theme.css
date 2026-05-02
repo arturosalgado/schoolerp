@@ -1,0 +1,17 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+input.fi-input,
+.fi-select-input {
+    font-size: 1.20rem !important;
+}
+
+.fi-fo-field-label-content {
+    font-size: 1.20rem !important;
+}
+
+.fi-section-header-heading {
+    font-size: 1.20rem !important;
+}

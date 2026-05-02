@@ -68,6 +68,7 @@ class StudentSections
                 TextInput::make('last_name')
                     ->required()
                     ->label('Apellido Paterno')
+                    ->rules(['regex:/^[\pL\s\'\-]+$/u'])
                     ->maxLength(255)
                     ->columnSpan(1)
                     ->live(onBlur: true)
@@ -77,6 +78,7 @@ class StudentSections
                 ,
                 TextInput::make('second_last_name')
                     ->label('Apellido Materno')
+                    ->rules(['regex:/^[\pL\s\'\-]+$/u'])
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
@@ -86,6 +88,7 @@ class StudentSections
                 TextInput::make('name')
                     ->label('Nombre(s)')
                     ->required()
+                    ->rules(['regex:/^[\pL\s\'\-]+$/u'])
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
@@ -204,11 +207,18 @@ class StudentSections
             //  ->label('Datos Academicos')
             ->schema([
                 TextInput::make('email')
-
-                    ->required()// because the account for user is created , email is required
+                    ->required()
+                    ->email()
                     ->label('Correo Electrónico')
                     ->maxLength(255)
                     ->columnSpan(1)
+                    ->unique(
+                        table: 'users',
+                        column: 'email',
+                        //dont check for updates against its own record
+                        ignorable: fn ($record) => $record?->user,
+                      
+                    )
                 ,
                 TextInput::make('mobile')
                     ->required(function ($get) use ($panel) {
@@ -218,18 +228,21 @@ class StudentSections
                         return true;
                     })
                     ->label('Celular')
-                    ->maxLength(255)
+                    ->tel()
+                    ->rules(['regex:/^[+]?[0-9\s\-\(\)]{7,20}$/'])
+                    ->maxLength(20)
                 ,
                 TextInput::make('emergency_name')
-                  //  ->required()
                     ->label('Nombre para Emergencias')
                     ->maxLength(255)
                 ->columnSpan(1)
                 ,
                 TextInput::make('emergency_phone')
-                   // ->required()
                     ->label('Telefono para Emergencias')
-                    ->maxLength(255)->columnSpan(1)
+                    ->tel()
+                    ->rules(['regex:/^[+]?[0-9\s\-\(\)]{7,20}$/'])
+                    ->maxLength(20)
+                    ->columnSpan(1)
                 ,
 
             ],
@@ -268,6 +281,15 @@ class StudentSections
             ->description('Gestiona los programas y planes de estudio del estudiante')
             ->schema([
                 TextInput::make('enrollment')->label('Matricula')->columnSpan(1),
+                Select::make('student_status_id')
+                    ->label('Estatus')
+                    ->options(function () {
+                        return \App\Models\StudentStatus::where('school_id', school_id())
+                            ->where('active', true)
+                            ->pluck('name', 'id');
+                    })
+                    ->required()
+                    ->columnSpan(1),
                 Repeater::make('student_programs')
                     ->columnSpanFull(2)
                     ->label('Programas')
@@ -295,7 +317,9 @@ class StudentSections
                             ->afterStateUpdated(function (callable $set) {
                                 $set('study_plan_id', null);
                                 $set('terminal_id', null);
-                            }),
+                            })
+                           
+                            ,
 
                         Select::make('study_plan_id')
                            // ->columnSpan(2)
