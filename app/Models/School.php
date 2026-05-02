@@ -6,7 +6,7 @@ use App\Actions\SchoolCreatedActions;
 use App\Actions\Seeders\SeedProgramLevels;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasMany; // used by roles()
 use App\Models\Role;
 
 class School extends Model
@@ -60,9 +60,9 @@ class School extends Model
     /**
      * Get the students for the school.
      */
-    public function students(): HasMany
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsToMany(Student::class, 'school_student')->withTimestamps();
     }
 
     /**

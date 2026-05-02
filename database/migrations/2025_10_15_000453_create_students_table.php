@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name')->nullable();
             $table->string('second_last_name')->nullable();
-            $table->string('enrollment')->unique()->nullable();
+            $table->string('enrollment')->nullable();
             $table->string('photo')->nullable();
             $table->date('dob')->nullable();
             $table->enum('sex', ['male', 'female'])->nullable();
@@ -25,8 +25,6 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('mobile')->nullable();
             $table->string('notes')->nullable();
-            $table->foreignId('student_status_id')->constrained('student_statuses');
-            $table->foreignId('school_id')->constrained('schools');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('state_id')->nullable()->constrained('states');
             $table->timestamps();

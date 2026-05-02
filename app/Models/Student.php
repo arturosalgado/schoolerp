@@ -27,7 +27,6 @@ class Student extends Model
         'mobile',
         'notes',
         'student_status_id',
-        'school_id',
         'user_id',
         'state_id',
         'extra_field_1',
@@ -55,25 +54,36 @@ class Student extends Model
     {
         parent::boot();
 
+        static::saving(function ($model) {
+            foreach (['name', 'last_name', 'second_last_name', 'curp', 'email', 'mobile', 'enrollment'] as $field) {
+                if (!empty($model->$field)) {
+                    $model->$field = trim($model->$field);
+                }
+            }
+        });
+
         static::creating(function ($model) {
             // Only run this when creating a new student
 
            // dd($model->email);
-
-            $u = User::firstOrCreate([
-                'email' => $model->email
-            ],
-                [
-                    'name'=>$model->name,
-                    'password' => Hash::make($model->password),
-                    'email' => $model->email
-                ]);
+            // IF THE USER EXISTS IN THE UNIVERS, ACCROSS ALL SCHOOLS, MATCH BY CURP OR EMAIL, OTHERWISE CREATE A NEW USER
+            $u = ($model->curp ? User::where('curp', $model->curp)->first() : null)
+                ?? User::firstOrCreate(
+                    ['email' => $model->email],
+                    [
+                        'name'     => $model->name,
+                        'password' => Hash::make($model->password),
+                        'email'    => $model->email,
+                        'curp'     => $model->curp,
+                    ]
+                );
             $model->user_id = $u->id;
 
             //$u->assignRole('Alumno',$model->school_id);
 
-            if ($model->school_id){
-                $u->schools()->syncWithoutDetaching([$model->school_id]);
+            $schoolId = school_id();
+            if ($schoolId) {
+                $u->schools()->syncWithoutDetaching([$schoolId]);
             }
 
 
@@ -110,8 +120,11 @@ class Student extends Model
         });
 
         static::created(function ($model) {
-            $model->refresh();
-            aLog($model->school_id,"Alumno: $model creado con identificador: Alumno-{$model->id}.",auth()->getUser(),$model,'student.created');
+            $schoolId = school_id();
+            if ($schoolId) {
+                $model->schools()->syncWithoutDetaching([$schoolId]);
+            }
+            aLog($schoolId,"Alumno: $model creado con identificador: Alumno-{$model->id}.",auth()->getUser(),$model,'student.created');
         });
 
 
@@ -120,12 +133,9 @@ class Student extends Model
 
 
 
-    /**
-     * Get the school that owns the student.
-     */
-    public function school(): BelongsTo
+    public function schools(): BelongsToMany
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsToMany(School::class, 'school_student')->withTimestamps();
     }
 
     /**
