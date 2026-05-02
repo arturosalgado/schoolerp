@@ -52,7 +52,8 @@ class RolePermissionSeeder extends Seeder
             ]
         ],
         'student'=>[
-            [
+
+        [
                 'resource'=> 'grades',
                 'permissions'=>['viewAny','view']
             ]
