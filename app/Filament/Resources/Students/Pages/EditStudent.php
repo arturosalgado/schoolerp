@@ -58,7 +58,7 @@ class EditStudent extends EditRecord
         $data['student_programs'] = $programsData;
 
         // Load status from pivot table for current school
-        $schoolId = \app('currentSchoolId') ?? auth()->user()->schools()->first()?->id;
+        $schoolId = school_id();
         if ($schoolId) {
             $pivotData = $this->record->schools()
                 ->where('schools.id', $schoolId)
@@ -116,7 +116,7 @@ class EditStudent extends EditRecord
         unset($data['student_programs']);
 
         if (isset($data['student_status_id'])) {
-            $schoolId = \app('currentSchoolId') ?? auth()->user()->schools()->first()?->id;
+            $schoolId = school_id();
             if ($schoolId) {
                 $this->record->schools()->updateExistingPivot($schoolId, [
                     'student_status_id' => $data['student_status_id'],

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Teacher Model
@@ -51,7 +52,6 @@ use Illuminate\Support\Facades\Hash;
  * @property string $name Teacher's first name
  * @property string $last_name Teacher's paternal last name
  * @property string $second_last_name Teacher's maternal last name (nullable)
- * @property string $password Hashed password
  * @property int $user_id Foreign key to User model
  */
 class Teacher extends Model
@@ -64,7 +64,6 @@ class Teacher extends Model
         'second_last_name',
         'email',
         'mobile',
-        'password',
         'picture',
         'user_id'
     ];
@@ -74,9 +73,7 @@ class Teacher extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-    ];
+    protected $hidden = [];
 
 
     protected static function boot()
@@ -84,13 +81,12 @@ class Teacher extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            // Only run this when creating a new teacher
             $u = User::firstOrCreate([
                 'email' => $model->email
             ],
                 [
-                    'name'=>$model->name,
-                    'password' => Hash::make($model->password),
+                    'name' => $model->name,
+                    'password' => Hash::make('12345678'),
                     'email' => $model->email
                 ]);
             $model->user_id = $u->id;
@@ -99,7 +95,10 @@ class Teacher extends Model
             $schoolId = request()->input('school_id') ?? school_id();
             
             if ($schoolId) {
-                $u->assignRole('Docente', $schoolId);
+                $role = Role::where('name', 'teacher')->where('school_id', $schoolId)->first();
+                if ($role) {
+                    $role->users()->syncWithoutDetaching([$u->id]);
+                }
                 $u->schools()->syncWithoutDetaching([$schoolId]);
             }
         });
@@ -114,25 +113,17 @@ class Teacher extends Model
         });
 
         static::updating(function ($model) {
-            // Handle user updates when student is being updated
-            if ($model->user_id && ($model->isDirty('email') || $model->isDirty('name') || (!empty($model->password) && $model->isDirty('password')))) {
+            if ($model->user_id && ($model->isDirty('email') || $model->isDirty('name'))) {
                 $user = User::find($model->user_id);
                 if ($user) {
                     $updateData = [];
 
-                    // Update name if it changed
                     if ($model->isDirty('name')) {
                         $updateData['name'] = $model->name;
                     }
 
-                    // Update email if it changed
                     if ($model->isDirty('email')) {
                         $updateData['email'] = $model->email;
-                    }
-
-                    // Only update password if it was provided (not empty) and changed
-                    if (!empty($model->password) && $model->isDirty('password')) {
-                        $updateData['password'] = Hash::make($model->password);
                     }
 
                     if (!empty($updateData)) {
@@ -150,6 +141,15 @@ class Teacher extends Model
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(School::class, 'school_teacher');
+    }
+
+    public function getImageUrl(): ?string
+    {
+        if ($this->picture == null) {
+            return null;
+        }
+        // return Storage::disk('s3')->url($this->picture);
+        return Storage::disk('public')->url($this->picture);
     }
 
 

@@ -185,7 +185,8 @@ class StudentSections
 
             ->schema([
                 FileUpload::make('photo')
-                    ->disk('s3')
+                    ->disk('public') // TODO: switch back to 's3' later
+                    // ->disk('s3')
                     ->directory(SchoolFileUploadService::getStudentPhotoDirectory())
                     ->visibility('public')
                     ->image()
@@ -195,7 +196,7 @@ class StudentSections
                     ->imageCropAspectRatio('1:1.2')
                     ->imageResizeTargetWidth('400')
                     ->imageResizeTargetHeight('460')
-                    ->maxSize(5048) // 2MB max (reduced from 5MB)
+                    ->maxSize(2048) // 2MB max
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
 
                 //->helperText('Las imágenes se redimensionarán automáticamente a 300x300px. Tamaño máximo: 2MB'),

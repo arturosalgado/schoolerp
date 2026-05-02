@@ -12,10 +12,7 @@ return new class extends Migration
         Schema::create('school_student', function (Blueprint $table) {
             $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->foreignId('student_status_id')->constrained('student_statuses');
-            $table->string('enrollment')->nullable();
             $table->primary(['school_id', 'student_id']);
-            $table->unique(['school_id', 'enrollment']);
             $table->timestamps();
         });
 

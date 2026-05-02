@@ -43,11 +43,11 @@ class StudentTable
 
         $tenant = Filament::getTenant();
         $baseColumns = [
-         //   ImageColumn::make('photo')->label(__('fields.picture'))->toggleable(),
+            StudentColumn::make('last_name')
+                ->label(__('fields.student'))
+                ->sortable('last_name')
+                ->searchable(['last_name', 'second_last_name', 'name', 'email']),
 
-           StudentColumn::make('last_name')->label(__('fields.student'))
-            ->sortable('last_name'),
-//
             TextColumn::make('curp')
                 ->searchable()->label(__('fields.curp'))
                 ->toggleable(),

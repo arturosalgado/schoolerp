@@ -61,6 +61,7 @@ class Student extends Model
 
         static::creating(function ($model) {
             // Only run this when creating a new student
+           // dump("creating student: ", $model);
 
             // dd($model->email);
             // IF THE USER EXISTS IN THE UNIVERS, ACCROSS ALL SCHOOLS, MATCH BY CURP OR EMAIL, OTHERWISE CREATE A NEW USER
@@ -76,10 +77,12 @@ class Student extends Model
                 );
             $model->user_id = $u->id;
 
-            // $u->assignRole('Alumno',$model->school_id);
-
             $schoolId = school_id();
             if ($schoolId) {
+                $role = Role::where('name', 'student')->where('school_id', $schoolId)->first();
+                if ($role) {
+                    $role->users()->syncWithoutDetaching([$u->id]);
+                }
                 $u->schools()->syncWithoutDetaching([$schoolId]);
             }
 
@@ -127,8 +130,8 @@ class Student extends Model
     public function schools(): BelongsToMany
     {
         return $this->belongsToMany(School::class, 'school_student')
-            ->withPivot('student_status_id')
-            ->withTimestamps();
+        ->withPivot('student_status_id')
+        ->withTimestamps();
     }
 
     /**
@@ -191,7 +194,8 @@ class Student extends Model
         if ($this->photo == null) {
             return null;
         }
-        $imageUrl = Storage::disk('s3')->url($this->photo);
+        // $imageUrl = Storage::disk('s3')->url($this->photo);
+        $imageUrl = Storage::disk('public')->url($this->photo);
 
         return $imageUrl;
 
