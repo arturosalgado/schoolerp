@@ -27,7 +27,7 @@ class MyAdminRegister extends FilamentRegister
 
     protected function getPaternoFormComponent(): Component
     {
-        return TextInput::make('paterno')
+        return TextInput::make('last_name')
             ->label('Apellido Paterno')
             ->required()
             ->maxLength(80)
@@ -36,14 +36,14 @@ class MyAdminRegister extends FilamentRegister
 
     protected function getMaternoFormComponent(): Component
     {
-        return TextInput::make('materno')
+        return TextInput::make('second_last_name')
             ->label('Apellido Materno')
             ->maxLength(80);
     }
 
     protected function getNombresFormComponent(): Component
     {
-        return TextInput::make('nombres')
+        return TextInput::make('name')
             ->label('Nombre(s)')
             ->required()
             ->maxLength(80);
@@ -62,7 +62,7 @@ class MyAdminRegister extends FilamentRegister
     protected function handleRegistration(array $data): Model
     {
         // Combine name parts into the 'name' field for database compatibility
-        $data['name'] = trim("{$data['paterno']} {$data['materno']} {$data['nombres']}");
+        $data['name'] = trim("{$data['last_name']} {$data['second_last_name']} {$data['name']}");
         
         return $this->getUserModel()::create($data);
     }

@@ -45,6 +45,21 @@ class RolesSeeder extends Seeder
             'system'      => true,
             'is_active'   => true,
         ],
+         [
+            'name'        => 'information_technology',
+            'label_es'    => 'Tecnología de la Información',
+            'description' => 'Tecnología de la Información.',
+            'system'      => true,
+            'is_active'   => true,
+        ],
+ [
+            'name'        => 'finance',
+            'label_es'    => 'Finanzas',
+            'description' => 'Acceso a funciones de finanzas.',
+            'system'      => true,
+            'is_active'   => true,
+        ],
+
     ];
 
     public function run(): void

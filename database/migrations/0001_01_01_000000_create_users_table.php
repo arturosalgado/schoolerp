@@ -28,7 +28,7 @@ return new class extends Migration
             $table->foreignId('state_id')->nullable()->constrained('states');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->boolean('active')->default(true);
             $table->rememberToken();
             $table->timestamps();
