@@ -22,9 +22,14 @@ return new class extends Migration
         
 
         Schema::table('students', function (Blueprint $table) {
-            $table->dropForeign(['school_id']);
-            $table->dropForeign(['student_status_id']);
-            $table->dropColumn(['school_id', 'student_status_id']);
+            if (Schema::hasColumn('students', 'school_id')) {
+                $table->dropForeign(['school_id']);
+                $table->dropColumn('school_id');
+            }
+            if (Schema::hasColumn('students', 'student_status_id')) {
+                $table->dropForeign(['student_status_id']);
+                $table->dropColumn('student_status_id');
+            }
         });
     }
 

@@ -26,7 +26,6 @@ class Student extends Model
         'password',
         'mobile',
         'notes',
-        'student_status_id',
         'user_id',
         'state_id',
         'extra_field_1',
@@ -48,15 +47,13 @@ class Student extends Model
         'password',
     ];
 
-
-
     protected static function boot()
     {
         parent::boot();
 
         static::saving(function ($model) {
             foreach (['name', 'last_name', 'second_last_name', 'curp', 'email', 'mobile', 'enrollment'] as $field) {
-                if (!empty($model->$field)) {
+                if (! empty($model->$field)) {
                     $model->$field = trim($model->$field);
                 }
             }
@@ -65,34 +62,32 @@ class Student extends Model
         static::creating(function ($model) {
             // Only run this when creating a new student
 
-           // dd($model->email);
+            // dd($model->email);
             // IF THE USER EXISTS IN THE UNIVERS, ACCROSS ALL SCHOOLS, MATCH BY CURP OR EMAIL, OTHERWISE CREATE A NEW USER
             $u = ($model->curp ? User::where('curp', $model->curp)->first() : null)
                 ?? User::firstOrCreate(
                     ['email' => $model->email],
                     [
-                        'name'     => $model->name,
+                        'name' => $model->name,
                         'password' => Hash::make($model->password),
-                        'email'    => $model->email,
-                        'curp'     => $model->curp,
+                        'email' => $model->email,
+                        'curp' => $model->curp,
                     ]
                 );
             $model->user_id = $u->id;
 
-            //$u->assignRole('Alumno',$model->school_id);
+            // $u->assignRole('Alumno',$model->school_id);
 
             $schoolId = school_id();
             if ($schoolId) {
                 $u->schools()->syncWithoutDetaching([$schoolId]);
             }
 
-
-
         });
 
         static::updating(function ($model) {
             // Handle user updates when student is being updated
-            if ($model->user_id && ($model->isDirty('email') || $model->isDirty('name') || (!empty($model->password) && $model->isDirty('password')))) {
+            if ($model->user_id && ($model->isDirty('email') || $model->isDirty('name') || (! empty($model->password) && $model->isDirty('password')))) {
                 $user = User::find($model->user_id);
                 if ($user) {
                     $updateData = [];
@@ -108,11 +103,11 @@ class Student extends Model
                     }
 
                     // Only up      date password if it was provided (not empty) and changed
-                    if (!empty($model->password) && $model->isDirty('password')) {
+                    if (! empty($model->password) && $model->isDirty('password')) {
                         $updateData['password'] = Hash::make($model->password);
                     }
 
-                    if (!empty($updateData)) {
+                    if (! empty($updateData)) {
                         $user->update($updateData);
                     }
                 }
@@ -124,18 +119,16 @@ class Student extends Model
             if ($schoolId) {
                 $model->schools()->syncWithoutDetaching([$schoolId]);
             }
-            aLog($schoolId,"Alumno: $model creado con identificador: Alumno-{$model->id}.",auth()->getUser(),$model,'student.created');
+            aLog($schoolId, "Alumno: $model creado con identificador: Alumno-{$model->id}.", auth()->getUser(), $model, 'student.created');
         });
-
-
 
     }
 
-
-
     public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(School::class, 'school_student')->withTimestamps();
+        return $this->belongsToMany(School::class, 'school_student')
+            ->withPivot('student_status_id')
+            ->withTimestamps();
     }
 
     /**
@@ -155,11 +148,34 @@ class Student extends Model
     }
 
     /**
-     * Get the student status that owns the student.
+     * Get the student status for the current school from pivot.
      */
-    public function studentStatus(): BelongsTo
+    public function schoolStatus(): ?StudentStatus
     {
-        return $this->belongsTo(StudentStatus::class);
+        $schoolId = school_id();
+        if (! $schoolId) {
+            return null;
+        }
+
+        $pivotStatusId = $this->schools()
+            ->where('schools.id', $schoolId)
+            ->first()?->pivot?->student_status_id;
+
+        if (! $pivotStatusId) {
+            return null;
+        }
+
+        return StudentStatus::find($pivotStatusId);
+    }
+
+    /**
+     * Get the status ID for a specific school from the pivot.
+     */
+    public function getStatusForSchool(int $schoolId): ?int
+    {
+        return $this->schools()
+            ->where('schools.id', $schoolId)
+            ->first()?->pivot?->student_status_id;
     }
 
     /**
@@ -170,12 +186,13 @@ class Student extends Model
         return $this->belongsTo(BloodType::class);
     }
 
-
     public function getImageUrl()
     {
-        if ($this->photo==null)
+        if ($this->photo == null) {
             return null;
+        }
         $imageUrl = Storage::disk('s3')->url($this->photo);
+
         return $imageUrl;
 
     }
@@ -186,8 +203,8 @@ class Student extends Model
     public function programs(): BelongsToMany
     {
         return $this->belongsToMany(Program::class, 'program_student')
-                    ->withPivot('is_current', 'enrolled_at', 'completed_at')
-                    ->withTimestamps();
+            ->withPivot('is_current', 'enrolled_at', 'completed_at')
+            ->withTimestamps();
     }
 
     /**
@@ -196,9 +213,9 @@ class Student extends Model
     public function latestProgram()
     {
         return $this->programs()
-                    ->wherePivot('is_current', true)
-                    ->orderBy('program_student.enrolled_at', 'desc')
-                    ->first();
+            ->wherePivot('is_current', true)
+            ->orderBy('program_student.enrolled_at', 'desc')
+            ->first();
     }
 
     public function studyPlans(): BelongsToMany
@@ -215,10 +232,8 @@ class Student extends Model
             ->withTimestamps();
     }
 
-
     public function __toString(): string
     {
-       return "$this->full_name";
+        return "$this->full_name";
     }
-
 }

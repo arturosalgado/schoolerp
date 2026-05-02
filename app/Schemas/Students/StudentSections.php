@@ -228,9 +228,8 @@ class StudentSections
                         return true;
                     })
                     ->label('Celular')
-                    ->tel()
-                    ->rules(['regex:/^[+]?[0-9\s\-\(\)]{7,20}$/'])
-                    ->maxLength(20)
+                    ->rules(['nullable', 'regex:/^[\d\s\(\)\+\-\.ext]+$/i'])
+                    ->maxLength(25)
                 ,
                 TextInput::make('emergency_name')
                     ->label('Nombre para Emergencias')
@@ -239,9 +238,8 @@ class StudentSections
                 ,
                 TextInput::make('emergency_phone')
                     ->label('Telefono para Emergencias')
-                    ->tel()
-                    ->rules(['regex:/^[+]?[0-9\s\-\(\)]{7,20}$/'])
-                    ->maxLength(20)
+                    ->rules(['nullable', 'regex:/^[\d\s\(\)\+\-\.ext]+$/i'])
+                    ->maxLength(25)
                     ->columnSpan(1)
                 ,
 

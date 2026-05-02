@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\School;
 use App\Models\StudentStatus;
 use Illuminate\Database\Seeder;
-
+// IMPORTANT, THIS IS MEANT TO BE ONLY WHEN A SCHOOL IS CREATED, IS NOT A GLOBAL SEEDER
 class StudentStatusSeeder extends Seeder
 {
     private static array $defaults = [
@@ -16,15 +16,13 @@ class StudentStatusSeeder extends Seeder
         
     ];
 
-    public function run(): void
+    static public function runForSchool(School $school): void
     {
-        School::all()->each(function (School $school) {
-            foreach (self::$defaults as $status) {
-                StudentStatus::updateOrCreate(
-                    ['name' => $status['name'], 'school_id' => $school->id],
-                    array_merge($status, ['school_id' => $school->id, 'active' => true])
-                );
-            }
-        });
+        foreach (self::$defaults as $status) {
+            StudentStatus::firstOrCreate(
+                ['school_id' => $school->id, 'name' => $status['name']],
+                ['description' => $status['description'], 'is_system' => $status['is_system']]
+            );
+        }
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use App\Actions\SchoolCreatedActions;
-use App\Actions\Seeders\SeedProgramLevels;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany; // used by roles()
-use App\Models\Role;
 
 class School extends Model
 {
@@ -28,14 +26,11 @@ class School extends Model
 
         static::created(function ($school) {
 
-
             // dd($school);// checked, it does bring the just created school.
             // Seed default program levels for the new school
-            //dd(auth()->id());
-            //dd(auth()->guard()->user());//checked it does have the user that created the school, so we can pass it to the actions for logging purposes
+            // dd(auth()->id());
+            // dd(auth()->guard()->user());//checked it does have the user that created the school, so we can pass it to the actions for logging purposes
             SchoolCreatedActions::run($school, auth()->guard()->user());
-
-
 
         });
     }
@@ -45,8 +40,8 @@ class School extends Model
      */
     public function getNameAttribute(): string
     {
-        //dd($this->slug);
-        return  $this->slug;
+        // dd($this->slug);
+        return $this->slug;
     }
 
     /**
@@ -62,7 +57,9 @@ class School extends Model
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'school_student')->withTimestamps();
+        return $this->belongsToMany(Student::class, 'school_student')
+            ->withPivot('student_status_id')
+            ->withTimestamps();
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Actions\Seeders\SeedProgramLevels;
 use Lorisleiva\Actions\Concerns\AsAction;
 use App\Models\School;
 use Database\Seeders\RolesSeeder;
+use Database\Seeders\StudentStatusSeeder;
 
 class SchoolCreatedActions
 {
@@ -33,6 +34,8 @@ class SchoolCreatedActions
         DocumentSeeder::run($school);
         aLog($school->id,'documents seeded for recently create school ',$user,$school,'school_created');
 
+
+        StudentStatusSeeder::runForSchool($school);
 
     }
 }

@@ -57,6 +57,17 @@ class EditStudent extends EditRecord
 
         $data['student_programs'] = $programsData;
 
+        // Load status from pivot table for current school
+        $schoolId = \app('currentSchoolId') ?? auth()->user()->schools()->first()?->id;
+        if ($schoolId) {
+            $pivotData = $this->record->schools()
+                ->where('schools.id', $schoolId)
+                ->first()?->pivot;
+            if ($pivotData && $pivotData->student_status_id) {
+                $data['student_status_id'] = $pivotData->student_status_id;
+            }
+        }
+
         return $data;
     }
 
@@ -69,14 +80,14 @@ class EditStudent extends EditRecord
             $terminalIds = [];
 
             foreach ($data['student_programs'] as $programData) {
-                if (!empty($programData['program_id'])) {
+                if (! empty($programData['program_id'])) {
                     $programIds[$programData['program_id']] = [
                         'is_current' => $programData['is_current'] ?? 0,
                         'enrolled_at' => $programData['enrolled_at'] ?? now(),
                         'completed_at' => $programData['completed_at'] ?? null,
                     ];
 
-                    if (!empty($programData['study_plan_id'])) {
+                    if (! empty($programData['study_plan_id'])) {
                         $studyPlanIds[$programData['study_plan_id']] = [
                             'program_id' => $programData['program_id'],
                             'is_active' => true,
@@ -86,7 +97,7 @@ class EditStudent extends EditRecord
                         ];
 
                         // Handle terminal relationship if selected
-                        if (!empty($programData['terminal_id'])) {
+                        if (! empty($programData['terminal_id'])) {
                             $terminalIds[$programData['terminal_id']] = [
                                 'study_plan_id' => $programData['study_plan_id'],
                             ];
@@ -103,6 +114,16 @@ class EditStudent extends EditRecord
 
         // Remove student_programs from data since it's not a column in students table
         unset($data['student_programs']);
+
+        if (isset($data['student_status_id'])) {
+            $schoolId = \app('currentSchoolId') ?? auth()->user()->schools()->first()?->id;
+            if ($schoolId) {
+                $this->record->schools()->updateExistingPivot($schoolId, [
+                    'student_status_id' => $data['student_status_id'],
+                ]);
+            }
+            unset($data['student_status_id']);
+        }
 
         return $data;
     }

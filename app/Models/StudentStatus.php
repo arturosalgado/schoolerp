@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class StudentStatus extends Model
 {
@@ -16,12 +16,12 @@ class StudentStatus extends Model
         'description',
         'active',
         'is_system',
-        'school_id'
+        'school_id',
     ];
 
     protected $casts = [
         'active' => 'boolean',
-        'is_system' => 'boolean'
+        'is_system' => 'boolean',
     ];
 
     public function school(): BelongsTo
@@ -29,9 +29,10 @@ class StudentStatus extends Model
         return $this->belongsTo(School::class);
     }
 
-    public function students(): HasMany
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsToMany(Student::class, 'school_student')
+            ->withTimestamps();
     }
 
     /**
@@ -57,5 +58,4 @@ class StudentStatus extends Model
     {
         return $query->where('is_system', true);
     }
-
 }
