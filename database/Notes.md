@@ -11,4 +11,4 @@ por que al final del dia, lo que se quiere es que el alumno vea sus dos escuelas
 pero podria tener los demas datos distintos por escuela
 o sea, solo se logra que se aproveche el mismo login. 
 CHECAR password. 
-lo otro es que tal vez se necesite doble password por escuela
+lo otro es que tal vez se necesite doble password por escuela 
