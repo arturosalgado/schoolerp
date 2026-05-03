@@ -22,7 +22,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ResetPassword::createUrlUsing(function ($notifiable, string $token) {
-            return Filament::getPanel('admin')->getResetPasswordUrl($token, $notifiable);
+            $roles = $notifiable->roles()->pluck('name')->toArray();
+
+            // If the user's only role is IT, send them to the IT panel
+            $panelId = (\count($roles) === 1 && $roles[0] === 'information_technology')
+                ? 'it'
+                : 'admin';
+
+            return Filament::getPanel($panelId)->getResetPasswordUrl($token, $notifiable);
         });
     }
 }

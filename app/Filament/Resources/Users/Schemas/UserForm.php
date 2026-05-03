@@ -44,6 +44,7 @@ class UserForm
                         })
                         ->preload()
                         ->searchable()
+                        ->required()
                         ->columnSpan(4),
                 ])->columnSpan(2)
                 ->columns(4),

@@ -30,6 +30,7 @@ public function panel(Panel $panel): Panel
             ->id('it')
             ->path('it')
             ->login(MyAdminLogin::class)
+            ->passwordReset()
             ->tenant(School::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterSchool::class)
             ->databaseNotifications()

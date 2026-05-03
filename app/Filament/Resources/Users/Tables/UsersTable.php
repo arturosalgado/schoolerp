@@ -73,26 +73,7 @@ ToggleColumn::make('active')
                                 ->send();
                         }
                     }),
-                Action::make('cambiarContrasena')
-                    ->label('Cambiar Contraseña')
-                    ->modalWidth('md')
-                    ->form([
-                        TextInput::make('password')
-                            ->label('Nueva Contraseña')
-                            ->password()
-                            ->required()
-                            ->minLength(8),
-                        TextInput::make('password_confirmation')
-                            ->label('Confirmar Contraseña')
-                            ->password()
-                            ->required()
-                            ->same('password'),
-                    ])
-                    ->action(function ($record, array $data) {
-                        $record->update([
-                            'password' => Hash::make($data['password']),
-                        ]);
-                    }),
+               
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
