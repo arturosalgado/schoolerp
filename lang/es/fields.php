@@ -73,6 +73,13 @@ return [
     'save_settings' => 'Guardar Configuración',
     'school_settings_title' => 'Configuración de Escuela',
 
+    // Enrollment period form
+    'opens_at' => 'Fecha de Apertura',
+    'closes_at' => 'Fecha de Cierre',
+    'enrollment_period_form_description' => 'Configure los datos básicos de la convocatoria de inscripción',
+    'enrollment_programs_description' => 'Seleccione los programas disponibles en esta convocatoria',
+    'enrollment_terms_description' => 'Seleccione los períodos académicos asociados',
+
     // Enrollment validation messages
     'programs_required' => 'Se requieren programas',
     'programs_required_message' => 'Debe crear al menos un programa antes de activar las inscripciones.',

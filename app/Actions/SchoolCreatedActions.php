@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Actions\Seeders\DocumentSeeder;
 
+use App\Actions\Seeders\SchoolActionSeedCycle;
 use App\Actions\Seeders\SeedProgramLevels;
 use Lorisleiva\Actions\Concerns\AsAction;
 use App\Models\School;
@@ -36,6 +37,8 @@ class SchoolCreatedActions
 
 
         StudentStatusSeeder::runForSchool($school);
+
+        SchoolActionSeedCycle::runForSchool($school);
 
     }
 }

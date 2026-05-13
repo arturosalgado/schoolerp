@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
+use Filament\Notifications\Livewire\Notifications;
+use Filament\Support\Enums\Alignment;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Notifications::alignment(Alignment::Center);
+
         ResetPassword::createUrlUsing(function ($notifiable, string $token) {
             $roles = $notifiable->roles()->pluck('name')->toArray();
 
