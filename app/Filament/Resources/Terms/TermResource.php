@@ -22,7 +22,12 @@ class TermResource extends Resource
 
     protected static ?string $tenantOwnershipRelationshipName = 'school';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Catálogos';
+    protected static string | \UnitEnum | null $navigationGroup = null;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('resources.catalogs');
+    }
 
     public static function getNavigationLabel(): string
     {

@@ -37,6 +37,7 @@ return [
     'enrollment_periods' => 'Inscripciones',
     'enrollment_period' => 'Inscripción',
     'prospects' => 'Prospectos',
+    'catalogs' => 'Catálogos',
     'viewAny'=>'Ver Todos',
     'view'=>'Ver',
     'update'=>'Editar',
