@@ -44,7 +44,7 @@ class PermissionsRelationManager extends RelationManager
 
         ];
 
-        $options = Panel::all()->pluck('name', 'name')->toArray();
+        //$options = Panel::all()->pluck('name', 'name')->toArray();
 
         return $schema
             ->components([
@@ -54,8 +54,7 @@ class PermissionsRelationManager extends RelationManager
 
 
                 ,
-                Select::make('panel')->options($options)->preload()->required(),
-                Select::make('action')->options($actions)->preload()->required(),
+              //  Select::make('action')->options($actions)->preload()->required(),
                 TextInput::make('description')
             ]);
     }
@@ -67,15 +66,7 @@ class PermissionsRelationManager extends RelationManager
             ->heading('Permisos')
             ->persistSortInSession()
             ->recordTitleAttribute('description')
-            ->modifyQueryUsing(function ($query) {
-                // Get the panels associated with the current role
-                $rolePanels = $this->ownerRecord->panels()->pluck('panels.name')->toArray();
-
-                // Filter permissions to only show those from the role's panels
-                if (!empty($rolePanels)) {
-                    $query->whereIn('permissions.panel', $rolePanels);
-                }
-            })
+            
             ->columns([
 
                 TextColumn::make('resource_es')->formatStateUsing(
@@ -153,13 +144,7 @@ class PermissionsRelationManager extends RelationManager
             ->defaultGroup('panel')
             ->paginated(false)
             ->filters([
-                SelectFilter::make('panel')
-                    ->label('Panel')
-                    ->options(Panel::all()->pluck('name', 'name')->mapWithKeys(function ($panelName) {
-                        return [$panelName => __('panels.' . $panelName, [], 'es') ?: ucfirst(str_replace('-', ' ', $panelName))];
-                    })->toArray())
-                    ->searchable()
-                    ->preload(),
+               
             ])
             ->headerActions([
                 //CreateAction::make()->label('Agregar Permiso'), Permissions are created by Super, only
@@ -174,11 +159,7 @@ class PermissionsRelationManager extends RelationManager
                         TextInput::make('resource')
                             ->required()
                             ->maxLength(255),
-                        Select::make('panel')
-                            ->options(Panel::all()->pluck('name', 'name')->toArray())
-                            ->preload()
-                            ->required(),
-                        Select::make('action')
+                          Select::make('action')
                             ->options([
                                 'viewAny' => 'ViewAny',
                                 'view' => 'View',

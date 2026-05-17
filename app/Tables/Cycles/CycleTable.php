@@ -2,9 +2,14 @@
 
 namespace App\Tables\Cycles;
 
+use App\Models\Cycle;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -48,6 +53,36 @@ class CycleTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('duplicate')
+                    ->label(__('resources.duplicate'))
+                    ->icon(Heroicon::OutlinedDocumentDuplicate)
+                    ->form(fn (Cycle $record) => [
+                        DatePicker::make('start_date')
+                            ->label(__('fields.start_date'))
+                            ->required()
+                            ->default($record->start_date->addYear()->format('Y-m-d')),
+                        DatePicker::make('end_date')
+                            ->label(__('fields.end_date'))
+                            ->required()
+                            ->default($record->end_date->addYear()->format('Y-m-d')),
+                        Toggle::make('is_active')
+                            ->label(__('fields.is_active'))
+                            ->default(false),
+                    ])
+                    ->action(function (array $data): void {
+                        Cycle::create([
+                            'start_date' => $data['start_date'],
+                            'end_date' => $data['end_date'],
+                            'is_active' => $data['is_active'],
+                            'school_id' => school_id(),
+                        ]);
+
+                        Notification::make()
+                            ->success()
+                            ->title(__('resources.cycle_duplicated'))
+                            ->send();
+                    })
+                    ->modalHeading(__('resources.duplicate') . ' ' . __('fields.cycle')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

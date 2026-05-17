@@ -16,6 +16,7 @@ class CycleService
                 'start_date' => $start,
                 'end_date' => $end,
                 'school_id' => $school_id,
+                'is_active' => true,
             ]
         );
     }

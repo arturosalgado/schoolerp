@@ -17,27 +17,7 @@ class RoleForm
 
         return $schema
             ->components([
-                TextInput::make('name')->label('Nombre')
-                    ->required()
-
-                    ->unique(table: 'roles', column: 'name', ignoreRecord: true),
-
-
-
-                Select::make('panels')
-                    ->relationship('panels', 'displayNameEs')
-                    ->label('Paneles')
-                    ->multiple()
-                    ->required()
-                    ->preload(),
-                Textarea::make('description')->label('Descripción')
-                    ->columnSpanFull(),
-
-                Toggle::make('is_active')->label('Activo')
-                    ->default(true)
-                    ->required(),
-                Hidden::make('school_id')->default(school_id())
-                ,
+                       
             ]);
     }
 }

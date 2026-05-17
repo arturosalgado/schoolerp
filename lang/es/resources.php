@@ -38,6 +38,8 @@ return [
     'enrollment_period' => 'Inscripción',
     'prospects' => 'Prospectos',
     'catalogs' => 'Catálogos',
+    'duplicate' => 'Duplicar',
+    'cycle_duplicated' => 'Ciclo duplicado exitosamente',
     'viewAny'=>'Ver Todos',
     'view'=>'Ver',
     'update'=>'Editar',

@@ -15,4 +15,12 @@ class CreateCycle extends CreateRecord
 
         return $data;
     }
+
+    protected function getDefaultFormData(): array
+    {
+        return [
+            'start_date' => request()->query('start_date'),
+            'end_date' => request()->query('end_date'),
+        ];
+    }
 }

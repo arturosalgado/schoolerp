@@ -3,6 +3,7 @@
 namespace App\Schemas\Terms;
 
 use App\Models\Cycle;
+use App\Models\TermName;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -21,11 +22,28 @@ class TermSections
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                TextInput::make('name')
+                                Select::make('name')
                                     ->label(__('fields.name'))
                                     ->required()
-                                    ->maxLength(255)
-                                    ->placeholder(__('fields.term_name_placeholder'))
+                                    ->options(fn () => TermName::where('school_id', school_id())
+                                        ->orderBy('name')
+                                        ->pluck('name', 'name'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->label(__('fields.name'))
+                                            ->required()
+                                            ->maxLength(255),
+                                    ])
+                                    ->createOptionUsing(function (array $data): string {
+                                        $termName = TermName::create([
+                                            'school_id' => school_id(),
+                                            'name' => $data['name'],
+                                        ]);
+
+                                        return $termName->name;
+                                    })
                                     ->columnSpan(1),
 
                                 Select::make('cycle_id')
@@ -51,7 +69,8 @@ class TermSections
                                 TextInput::make('order')
                                     ->label(__('fields.order'))
                                     ->numeric()
-                                    ->default(0)
+                                    ->default(1)
+                                    ->minValue(1)
                                     ->columnSpan(1),
 
                                 Toggle::make('is_active')
