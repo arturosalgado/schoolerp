@@ -28,7 +28,7 @@ public function panel(Panel $panel): Panel
     {
         return $panel
             ->id('it')
-            ->path('it')
+            ->path('information-technology')
             ->login(MyAdminLogin::class)
             ->passwordReset()
             ->tenant(School::class, slugAttribute: 'slug')

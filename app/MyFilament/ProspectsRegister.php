@@ -18,15 +18,19 @@ class ProspectsRegister extends MyAdminRegister
 
     public function mount(): void
     {
-        $slug = request()->route('school');
+        $slug = request()->route('schoolSlug');
+
+        \Log::info('[ProspectsRegister] mount()', ['slug' => $slug, 'url' => request()->url()]);
 
         if (! $slug) {
+            \Log::error('[ProspectsRegister] No slug');
             abort(404);
         }
 
         $this->school = School::where('slug', $slug)->first();
 
         if (! $this->school) {
+            \Log::error('[ProspectsRegister] School not found: ' . $slug);
             abort(404);
         }
 
@@ -133,13 +137,14 @@ class ProspectsRegister extends MyAdminRegister
     protected function handleRegistration(array $data): Model
     {
         $firstName  = $data['name'];
+        $lastName   = $data['last_name'];
         $secondLast = $data['second_last_name'] ?: 'X';
 
-        if (!empty($firstName) && !empty($data['last_name']) && !empty($data['dob']) && !empty($data['sex']) && !empty($data['state_of_birth'])) {
+        if (!empty($firstName) && !empty($lastName) && !empty($data['dob']) && !empty($data['sex']) && !empty($data['state_of_birth'])) {
             try {
                 $data['curp'] = (new CurpService(
                     $firstName,
-                    $data['last_name'],
+                    $lastName,
                     $secondLast,
                     $data['dob'],
                     $data['sex'],
@@ -148,11 +153,34 @@ class ProspectsRegister extends MyAdminRegister
             } catch (\Exception) {}
         }
 
-        $data['name'] = trim("{$data['last_name']} {$secondLast} {$firstName}");
+        $data['name'] = trim("{$lastName} {$secondLast} {$firstName}");
 
         $user = $this->getUserModel()::create($data);
 
         $this->school->users()->attach($user->id);
+
+        // Store school slug in session for logout redirect
+        session(['prospect_school_slug' => $this->school->slug]);
+
+        // Create prospect linked to user and active enrollment period
+        $activeEnrollment = $this->school->enrollmentPeriods()
+            ->where('is_active', true)
+            ->first();
+
+        \App\Models\Prospect::create([
+            'school_id' => $this->school->id,
+            'user_id' => $user->id,
+            'enrollment_period_id' => $activeEnrollment?->id,
+            'name' => $firstName,
+            'last_name' => $lastName,
+            'second_last_name' => $data['second_last_name'] ?? null,
+            'email' => $data['email'] ?? null,
+            'dob' => $data['dob'] ?? null,
+            'sex' => $data['sex'] ?? null,
+            'curp' => $data['curp'] ?? null,
+            'source' => 'registration_form',
+            'status' => 'new',
+        ]);
 
         return $user;
     }

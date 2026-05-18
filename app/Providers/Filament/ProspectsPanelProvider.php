@@ -29,7 +29,7 @@ class ProspectsPanelProvider extends PanelProvider
             ->path('prospects')
             ->login(ProspectsLogin::class)
             ->registration(ProspectsRegister::class)
-            ->registrationRouteSlug('{school}/register')
+            ->registrationRouteSlug('{schoolSlug}/register')
             ->colors([
                 'primary' => Color::Teal,
             ])

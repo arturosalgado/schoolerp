@@ -42,16 +42,19 @@ class ProgramResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            
+
+            Select::make('program_level_id')
+                ->label('Nivel')
+                ->relationship('programLevel', 'name',function ($query) {
+                    $query->where('school_id',school_id());
+                })
+                
+                ->required(),
             TextInput::make('name')
                 ->label('Nombre')
                 ->required()
                 ->maxLength(255),
-
-            Select::make('program_level_id')
-                ->label('Nivel')
-                ->relationship('programLevel', 'name')
-                ->required(),
-
             Toggle::make('active')
                 ->label('Activo')
                 ->default(true),

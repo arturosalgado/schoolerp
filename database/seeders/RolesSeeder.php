@@ -46,7 +46,7 @@ class RolesSeeder extends Seeder
             'is_active'   => true,
         ],
          [
-            'name'        => 'information_technology',
+            'name'        => 'information-technology',
             'label_es'    => 'Tecnología de la Información',
             'description' => 'Tecnología de la Información.',
             'system'      => true,

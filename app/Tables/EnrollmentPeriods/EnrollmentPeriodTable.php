@@ -2,6 +2,8 @@
 
 namespace App\Tables\EnrollmentPeriods;
 
+use App\Models\EnrollmentPeriod;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -65,6 +67,15 @@ class EnrollmentPeriodTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('qr')
+                    ->label('QR')
+                    ->icon(Heroicon::OutlinedQrCode)
+                    ->modalHeading(__('fields.registration_url'))
+                    ->modalContent(fn (EnrollmentPeriod $record) => view('filament.modals.enrollment-qr', [
+                        'url' => url('/prospects/' . $record->school->slug . '/register'),
+                        'slug' => $record->school->slug,
+                    ]))
+                    ->modalSubmitAction(false),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cycle;
+use App\Models\ProgramLevel;
 use App\Models\Role;
 use App\Models\School;
+use App\Models\Term;
+use App\Models\TermName;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -38,5 +42,44 @@ class IciSchoolSeeder extends Seeder
         if ($itRole) {
             $itRole->users()->syncWithoutDetaching([$user->id]);
         }
+
+        // Seed cycle Aug 15 2026 - Jul 15 2027
+        $cycle = Cycle::firstOrCreate(
+            [
+                'school_id' => $school->id,
+                'start_date' => '2026-08-15',
+            ],
+            [
+                'end_date' => '2027-07-15',
+                'is_active' => true,
+            ]
+        );
+
+        // Seed academic level
+        ProgramLevel::firstOrCreate(
+            ['school_id' => $school->id, 'name' => 'Licenciatura'],
+            ['active' => true]
+        );
+
+        // Seed term name
+        TermName::firstOrCreate([
+            'school_id' => $school->id,
+            'name' => 'Primavera',
+        ]);
+
+        // Seed term Aug 15 2026 - Dec 15 2026
+        Term::firstOrCreate(
+            [
+                'school_id' => $school->id,
+                'cycle_id' => $cycle->id,
+                'name' => 'Primavera',
+            ],
+            [
+                'start_date' => '2026-08-15',
+                'end_date' => '2026-12-15',
+                'is_active' => true,
+                'order' => 1,
+            ]
+        );
     }
 }

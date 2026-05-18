@@ -13,6 +13,7 @@ class Prospect extends Model
 
     protected $fillable = [
         'school_id',
+        'user_id',
         'enrollment_period_id',
         'name',
         'last_name',
@@ -37,6 +38,11 @@ class Prospect extends Model
     public function enrollmentPeriod(): BelongsTo
     {
         return $this->belongsTo(EnrollmentPeriod::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function school(): BelongsTo

@@ -31,4 +31,14 @@ Route::post('/credentials/{school}/reset-positions', [CredentialsController::cla
     ->name('credentials.reset-positions')
     ->middleware(['auth']);
 
+Route::get('/qr/{slug}', function (string $slug) {
+    $url = url('/prospects/' . $slug . '/register');
+
+    return response(
+        \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(600)->generate($url),
+        200,
+        ['Content-Type' => 'image/png']
+    );
+})->name('qr.enrollment')->middleware(['auth']);
+
 
