@@ -9,8 +9,8 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
-use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -20,11 +20,11 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class FinancePanelProvider extends PanelProvider
+class FinancePanelProvider extends BasePanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        return $this->configurePanel($panel)
             ->id('finance')
             ->login(MyAdminLogin::class)
             ->path('finance')

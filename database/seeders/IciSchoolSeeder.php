@@ -31,6 +31,9 @@ class IciSchoolSeeder extends Seeder
             ]
         );
 
+        // Ensure roles are seeded (in case school already existed)
+        RolesSeeder::seedForSchool($school, $user);
+
         // Attach user to school
         $school->users()->syncWithoutDetaching([$user->id]);
 

@@ -2,17 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\School;
 use App\MyFilament\MyAdminLogin;
 use App\MyFilament\MyAdminRegister;
-use App\MyFilament\RegisterSchool;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
-use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
@@ -24,17 +21,14 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 
-class AdminPanelProvider extends PanelProvider
+class AdminPanelProvider extends BasePanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        return $panel
+        return $this->configurePanel($panel)
             ->default()
             ->id('admin')
             ->path('admin')
-            ->tenant(School::class, slugAttribute: 'slug')
-            ->tenantRegistration(RegisterSchool::class)
-            ->maxContentWidth(Width::Full)
             ->login(MyAdminLogin::class)
             ->registration(MyAdminRegister::class)
             ->passwordReset()

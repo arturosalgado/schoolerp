@@ -2,17 +2,14 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\School;
 use App\MyFilament\MyAccountWidget;
 use App\MyFilament\MyAdminLogin;
-use App\MyFilament\RegisterSchool;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
-use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Width;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -22,17 +19,15 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class ItPanelProvider extends PanelProvider
+class ItPanelProvider extends BasePanelProvider
 {
-public function panel(Panel $panel): Panel
+    public function panel(Panel $panel): Panel
     {
-        return $panel
+        return $this->configurePanel($panel)
             ->id('it')
             ->path('information-technology')
             ->login(MyAdminLogin::class)
             ->passwordReset()
-            ->tenant(School::class, slugAttribute: 'slug')
-            ->tenantRegistration(RegisterSchool::class)
             ->databaseNotifications()
             ->maxContentWidth(Width::Full)
             ->colors([

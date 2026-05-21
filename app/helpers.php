@@ -33,30 +33,22 @@ if (!function_exists('aLog')) {
 if (!function_exists('subdomain')) {
     function subdomain()
     {
-        $path = request()->path();
-        // segment is of the form /admin/CCJP
-        $segments = explode('/', $path);
+        // Try host-based subdomain first (e.g. ici.schoolerp.test)
+        $host = request()->getHost();
+        $parts = explode('.', $host);
 
-        //dd($segments);
-        if (count(request()->segments()) <= 2 && count($segments) >1){
-            return $segments[1];
+        // If host has more than 2 parts (subdomain.domain.tld), the first part is the subdomain
+        if (count($parts) >= 3) {
+            return $parts[0];
         }
-        else{
-            return '';
-        }
-        // First try to get from URL path (for tenant-based URLs like /admin/perla/account)
 
-        // dd(count($segments));
-
-        // If URL is like admin/perla/something, return 'perla'
-        if (count($segments) >= 2 && $segments[0] === 'admin' && $segments[1] !== '') {
+        // Fall back to URL path-based detection (e.g. /admin/ici)
+        $segments = request()->segments();
+        if (count($segments) >= 2 && in_array($segments[0], ['admin', 'it', 'finance', 'students'])) {
             return $segments[1];
         }
 
-        // Fallback to host-based subdomain
-        $host = request()->getHost(); // Returns full domain e.g. "subdomain.example.com"
-        $subdomain = explode('.', $host)[0];
-        return $subdomain;
+        return '';
     }
 }
 
@@ -86,10 +78,10 @@ if (!function_exists('school_id')) {
         //dd($subdomain);;
 
         try {
-            if (in_array($subdomain, ['admin', 'api'])){
+            if (in_array($subdomain, ['admin', 'api', 'www', ''])){
                 return $default;
             }
-            $school = School::where('name', $subdomain)->first();
+            $school = School::where('slug', $subdomain)->first();
             if ($school == null) {
                 //dump('school not found');
                 return $default;

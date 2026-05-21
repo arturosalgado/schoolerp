@@ -45,6 +45,15 @@ class School extends Model
     }
 
     /**
+     * Use slug as route key for tenant URLs.
+     * used for subdomains
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
      * Get the users associated with the school.
      */
     public function users(): BelongsToMany
